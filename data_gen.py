@@ -26,42 +26,26 @@ class MWPDataset(Dataset):
         torch.manual_seed(self.seed)
         if DEVICE == 'cuda':
             torch.cuda.manual_seed(self.seed)
-
+        
+        self.problems = {'1-1': self.__get_problem01_01__,
+                         '1-2': self.__get_problem01_02__,
+                         '1-3': self.__get_problem01_03__,
+                         '1-4': self.__get_problem01_04__,
+                         '2-1': self.__get_problem02_01__,
+                         '2-2': self.__get_problem02_02__,
+                         '2-3': self.__get_problem02_03__,
+                         '4-1': self.__get_problem04_01__,
+                         '4-2': self.__get_problem04_02__}
+                         
     def __len__(self):
         return self.max_len
 
     def __getitem__(self, idx):
-        p = np.random.rand()
-        '''
-        if p < 1 / 6:
-            sample = self.__get_problem01_01__()
-        elif p < 2 / 6:
-            sample = self.__get_problem02_01__()
-        elif p < 3 / 6:
-            sample = self.__get_problem02_02__()
-        elif p < 4 / 6:
-            sample = self.__get_problem02_03__()
-        elif p < 5 / 6:
-            sample = self.__get_problem04_01__()
-        else:
-            # else p < 6/7:
-            sample = self.__get_problem04_02__()
-        '''
-        num = 7;
-        if p < 1 / num:
-            sample = self.__get_problem01_01__()
-        elif p < 2 / num:
-            sample = self.__get_problem01_02__()
-        elif p < 3 / num:
-            sample = self.__get_problem01_03__()
-        elif p < 4 / num:
-            sample = self.__get_problem01_04__()
-        elif p < 5 / num:
-            sample = self.__get_problem02_01__()
-        elif p < 6 / num:
-            sample = self.__get_problem02_02__()
-        else:
-            sample = self.__get_problem02_03__()
+        num = len(self.problems)
+        np.random.seed(idx)
+        p = np.random.randint(num)
+        problem_idx = list(self.problems.keys())[p]        
+        sample = self.problems[problem_idx]()
 
         return sample
 
@@ -152,7 +136,7 @@ class MWPDataset(Dataset):
             str_array += '%d' % np_array[-1]
         elif dtype == 'float':
             np_array = np_array + (np.random.rand(num) - .5)
-
+            np_array = np.round_(np_array, 2)
             for idx in range(num - 1):
                 # Fraction
                 if np.random.rand() <= frac_prob:
@@ -527,16 +511,17 @@ class MWPDataset(Dataset):
         return que, eq, ans
 
     def __get_problem04_02__(self):
-        pos = self.__get_value__(1, 5)
+        pos = self.__get_value__(1, 2)
         pos_str = self.__get_pos_str__(pos)
-        v = self.__get_float_value__(0.2, 50)
+        v = self.__get_float_value__(1, 50)
         s1, s2, op = self.__get_shift__()
 
         if op == 'increase':
-            eq = '%.2f / %d' % (v, (10 ** pos - 1))
+            # eq = '%.2f / %d' % (v, (10 ** pos - 1))
+            eq = '%.2f / (%d - 1)' % (v, (10 ** pos))
             ans = '%.2f' % (v / (10 ** pos - 1))
         else:
-            eq = '%.2f / %d' % (v, -(10 ** (-pos) - 1))
+            eq = '%.2f / (%.2f - 1)' % (v, -(10 ** (-pos)))
             ans = '%.2f' % (v / -(10 ** (-pos) - 1))
 
         p = np.random.rand()
@@ -594,6 +579,4 @@ if __name__ == '__main__':
                        #'Answer': answer_list})
                        'Answer' : np.array(answer_list).reshape(-1)})
     df.to_csv('train.csv', index=False, encoding='euc-kr')
-
-
 
