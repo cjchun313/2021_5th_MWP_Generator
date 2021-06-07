@@ -3,7 +3,8 @@ import random
 import tqdm
 import math
 import pandas as pd
-
+import itertools
+from math_custom import *
 import pyjosa
 
 from fractions import Fraction
@@ -35,7 +36,11 @@ class MWPDataset(Dataset):
                          '2-2': self.__get_problem02_02__,
                          '2-3': self.__get_problem02_03__,
                          '4-1': self.__get_problem04_01__,
-                         '4-2': self.__get_problem04_02__}
+                         '4-2': self.__get_problem04_02__,
+                         '4-3': self.__get_problem04_03__,
+                         '9-1': self.__get_problem09_01__,
+                         '9-2': self.__get_problem09_02__,
+                         '9-3': self.__get_problem09_03__}
                          
     def __len__(self):
         return self.max_len
@@ -83,9 +88,11 @@ class MWPDataset(Dataset):
         return n0, n1, n2, n3
 
     def __get_ordinal__(self, idx):
-        number = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세', '열네', '열다섯', \
-                  '열여섯', '열일곱', '열여덟', '열아홉', '스무', '스물한', '스물두', '스물세', '스물네', '스물다섯', '스물여섯', \
-                  '스물일곱', '스물여덟', '스물아홉', '서른']
+        # number = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세', '열네', '열다섯', \
+        #           '열여섯', '열일곱', '열여덟', '열아홉', '스무', '스물한', '스물두', '스물세', '스물네', '스물다섯', '스물여섯', \
+        #           '스물일곱', '스물여덟', '스물아홉', '서른']
+        number = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', \
+                  '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30']
         return number[idx]
 
     def __get_person__(self):
@@ -123,6 +130,24 @@ class MWPDataset(Dataset):
         idx = np.random.randint(0, len(subject))
         return subject[idx]
 
+    def __get_color__(self):
+        color = ['빨간', '주황', '노란', '초록', '파란', '흰', '검은', '보라']
+        idx = np.random.randint(0, len(food))
+        return color[idx]
+    
+    def __get_colorname__(self):
+        color = ['빨간색', '주황색', '노란색', '초록색', '파란색', '흰색', '검은색', '보라색']
+        idx = np.random.randint(0, len(food))
+        return color[idx]
+
+    def __get_kor_bracket_seq__(self, num):
+        kor = ['(가)', '(나)', '(다)', '(라)', '(마)', '(바)', '(사)', '(아)', '(자)', '(차)', '(카)', '(타)', '(파)', '(하)']
+        str_val = ''
+        for idx in range(num - 1):
+            str_val += '%s, ' % kor[idx]
+        str_val += '%s' % kor[num - 1]
+        return kor[:num], str_val
+    
     def __get_float_value__(self, min, max):
         return np.random.randint(min + .5, max) + (np.random.rand(1)[0] - .5)
 
@@ -144,15 +169,15 @@ class MWPDataset(Dataset):
                     val = Fraction(Decimal(val))
                     str_val = '%d/%d, ' % (val.numerator, val.denominator)
                 else:
-                    str_val = '%.2f, ' % np_array[idx]
+                    str_val = '%.02f, ' % np_array[idx]
                 str_array += str_val
 
             if np.random.rand() <= frac_prob:
-                val = '%.2f' % np_array[-1]
+                val = '%.02f' % np_array[-1]
                 val = Fraction(Decimal(val))
                 str_val = '%d/%d' % (val.numerator, val.denominator)
             else:
-                str_val = '%.2f' % np_array[-1]
+                str_val = '%.02f' % np_array[-1]
 
             str_array += str_val
 
@@ -160,33 +185,33 @@ class MWPDataset(Dataset):
 
     def __get_ordinal2__(self, max):
         if max == 2:
-            name = ['가장', '첫 번째로', '첫째 번으로', '두 번째로', '둘째 번으로']
+            name = ['가장', '1번째로', '2번째로']
         elif max == 3:
-            name = ['가장', '첫 번째로', '첫째 번으로', '두 번째로', '둘째 번으로', '세 번째로', '셋째 번으로']
+            name = ['가장', '1번째로', '2번째로', '3번째로']
         elif max == 4:
-            name = ['가장', '첫 번째로', '첫째 번으로', '두 번째로', '둘째 번으로', '세 번째로', '셋째 번으로', '네 번째로', '넷째 번으로']
+            name = ['가장', '1번째로', '2번째로', '3번째로', '4번째로']
         idx = np.random.randint(0, len(name))
-        if idx <= 2:
+        if idx <= 1:
             ord_idx = 0
-        elif idx <= 4:
+        elif idx == 2:
             ord_idx = 1
-        elif idx <= 6:
+        elif idx == 3:
             ord_idx = 2
-        elif idx <= 8:
+        elif idx == 4:
             ord_idx = 3
         return name[idx], ord_idx
 
     def __get_pos_str__(self, pos):
         if pos == 1:
-            name = '한'
+            name = '1'
         elif pos == 2:
-            name = '두'
+            name = '2'
         elif pos == 3:
-            name = '세'
+            name = '3'
         elif pos == 4:
-            name = '네'
+            name = '4'
         elif pos == 5:
-            name = '다섯'
+            name = '5'
         return name
 
     def __get_shift__(self):
@@ -483,17 +508,17 @@ class MWPDataset(Dataset):
                 ans = '%d' % ((v1 + v2) / 2)
         else:
             if op_type == 'add':
-                eq = '%.2f + %.2f' % (v1, v2)
-                ans = '%.2f' % (v1 + v2)
+                eq = '%.02f + %.02f' % (v1, v2)
+                ans = '%.02f' % (v1 + v2)
             elif op_type == 'sub':
-                eq = '%.2f - %.2f' % (v1, v2)
-                ans = '%.2f' % (v1 - v2)
+                eq = '%.02f - %.02f' % (v1, v2)
+                ans = '%.02f' % (v1 - v2)
             elif op_type == 'mul':
-                eq = '%.2f * %.2f' % (v1, v2)
-                ans = '%.2f' % (v1 * v2)
+                eq = '%.02f * %.02f' % (v1, v2)
+                ans = '%.02f' % (v1 * v2)
             elif op_type == 'avg':
-                eq = '(%.2f + %.2f) / 2' % (v1, v2)
-                ans = '%.2f' % ((v1 + v2) / 2)
+                eq = '(%.02f + %.02f) / 2' % (v1, v2)
+                ans = '%.02f' % ((v1 + v2) / 2)
 
         p = np.random.rand()
         if p < .25:
@@ -517,48 +542,165 @@ class MWPDataset(Dataset):
         s1, s2, op = self.__get_shift__()
 
         if op == 'increase':
-            # eq = '%.2f / %d' % (v, (10 ** pos - 1))
-            eq = '%.2f / (%d - 1)' % (v, (10 ** pos))
-            ans = '%.2f' % (v / (10 ** pos - 1))
+            # eq = '%.02f / %d' % (v, (10 ** pos - 1))
+            eq = '%.02f / (%d - 1)' % (v, (10 ** pos))
+            ans = '%.02f' % (v / (10 ** pos - 1))
         else:
-            eq = '%.2f / (%.2f - 1)' % (v, -(10 ** (-pos)))
-            ans = '%.2f' % (v / -(10 ** (-pos) - 1))
+            eq = '%.02f / (%.02f - 1)' % (v, -(10 ** (-pos)))
+            ans = '%.02f' % (v / -(10 ** (-pos) - 1))
 
         p = np.random.rand()
 
         if p < 1 / 3:
-            que = '어떤 소수의 소수점을 %s쪽으로 %s 자리 옮기면 원래보다 %.2f만큼 %s집니다. 원래의 소수를 구하시오.' \
+            que = '어떤 소수의 소수점을 %s쪽으로 %s자리 옮기면 원래보다 %.02f만큼 %s집니다. 원래의 소수를 구하시오.' \
                   % (s1, pos_str, v, s2)
         elif p < 2 / 3:
-            que = '어떤 수의 소수점을 %s쪽으로 %s 자리 옮기면 원래보다 %.2f만큼 %s집니다. 원래의 소수를 구하시오.' \
+            que = '어떤 수의 소수점을 %s쪽으로 %s자리 옮기면 원래보다 %.02f만큼 %s집니다. 원래의 소수를 구하시오.' \
                   % (s1, pos_str, v, s2)
         else:
-            que = '알 수 없는 소수의 소수점을 %s쪽으로 %s 자리 옮기면 원래보다 %.2f만큼 %s집니다. 원래의 소수를 구하시오.' \
+            que = '알 수 없는 소수의 소수점을 %s쪽으로 %s자리 옮기면 원래보다 %.02f만큼 %s집니다. 원래의 소수를 구하시오.' \
                   % (s1, pos_str, v, s2)
         return que, eq, ans
 
-    # def __get_problem04_03__(self):
-    #     v = self.__get_value__(2, 5)
-    #     str_vs, vs = self.__get_value_array__(0, 15, v)
-    #     v_str = self.__get_pos_str__(v)
-    #
-    #     # eq = '%d // math.lcm - / %d' %(v, (10**pos - 1))
-    #     # ans = '%.2f' %(v / (10**pos - 1))
-    #
-    #     p = np.random.rand()
-    #     if p  <  1/3:
-    #         que = '총 %d개의 수 %s로 나누어떨어지는 %s 자리 수는 모두 몇 개 있습니까?' \
-    #               % (v, str_vs, v_str)
-    #     elif p < 2/3:
-    #         que = '모두 %d개의 수 %s로 나누어 떨어질 수 있는 %s 자리 수는 총 몇 개 있니까?' \
-    #               % (v, str_vs, v_str)
-    #     else:
-    #         que = '%d 개의 수 %s로 나누어 떨어질 수 있는 %s 자리 수는 모두 몇 개 있습니까?' \
-    #               % (v, str_vs, v_str)
-    #     return que, eq, ans
+    def __get_problem04_03__(self):
+        v = self.__get_value__(2, 5)
+        str_vs, vs = self.__get_value_array__(1, 10, v)
+        
+        n_digit = self.__get_value__(2, 4)
+        n_digit_str = self.__get_pos_str__(n_digit)
+    
+        eq = '(%d - 1) // LCM([%s]) - (%d - 1) // LCM([%s])' %(10**(n_digit), str_vs, 10**(n_digit - 1), str_vs)
+        ans = '%d' %((10**(n_digit) - 1)//lcm(vs) - (10**(n_digit - 1) - 1)//lcm(vs))
+    
+        p = np.random.rand()
+        if p  <  1/3:
+            que = '총 %d개의 수 %s로 나누어떨어지는 %s자리 수는 모두 몇 개 있습니까?' \
+                  % (v, str_vs, n_digit_str)
+        elif p < 2/3:
+            que = '모두 %d개의 수 %s로 나누어 떨어질 수 있는 %s자리 수는 총 몇 개 있니까?' \
+                  % (v, str_vs, n_digit_str)
+        else:
+            que = '%d 개의 수 %s로 나누어 떨어질 수 있는 %s자리 수는 모두 몇 개 있습니까?' \
+                  % (v, str_vs, n_digit_str)
+        return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    
+    ''' 유형9 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+    def __get_problem09_01__(self):
+        n0, n1 = self.__get_name2__()
+        ns = [n0[0:2], n1[0:2]]
+        v0 = self.__get_value__(2, 5)
+        str_vs0, vs0 = self.__get_value_array__(1, 50, v0)
+        
+        v1 = self.__get_value__(2, 5)
+        str_vs1, vs1 = self.__get_value_array__(1, 50, v1)
 
+        comp_op = self.__get_value__(0, 1)
+        if comp_op == 0:
+            comp_op_str = '큽'
+            eq = 'CMP(SUM(%s), SUM(%s))' % (str_vs0, str_vs1)
+            ans = '%s' % (ns[compare(sum(vs0), sum(vs1))])
+        else:
+            comp_op_str = '작습'
+            eq = 'CMP(SUM(%s), SUM(%s))' % (str_vs0, str_vs1)
+            ans = '%s' % (ns[1 - compare(sum(vs0), sum(vs1))])
+
+        p = np.random.rand()
+        if p < 0.25:
+            que = '%s는 %s를 모았습니다. %s는 %s를 모았습니다. 누가 모은 수가 더 %s니까?' \
+                  % (n0, str_vs0, n1, str_vs1, comp_op_str)
+        elif p < .5:
+            que = '%s는 %s를 가지고있습니다. %s는 %s를 가지고있습니다. 누가 가지고있는 수가 더 %s니까?' \
+                  % (n0, str_vs0, n1, str_vs1, comp_op_str)
+        elif p < .75:
+            que = '%s는 %s를 모았으며, %s는 %s를 모았습니다. 누가 모은 수가 더 %s니까?' \
+                  % (n0, str_vs0, n1, str_vs1, comp_op_str)
+        else:
+            que = '%s는 %s를 가졌으며, %s는 %s를 가지고있습니다. 누가 가지고있는 수가 더 %s니까?' \
+                  % (n0, str_vs0, n1, str_vs1, comp_op_str)
+        return que, eq, ans
+
+    def __get_problem09_02__(self):
+        num = self.__get_value__(2, 4)
+        kor_b, kor_b_str = self.__get_kor_bracket_seq__(num)
+        num_q = num
+        arr = range(num)
+        
+        if np.random.rand() >= .5: # in case box name
+            obj_name = self.__get_box__()
+        else: # in case ball name
+            obj_name = self.__get_ball__()        
+        
+        if np.random.rand() >= .5: # in case ">"
+            comp_op = '>'
+            comp_op_str = '큰'
+        else: # in case "<"
+            comp_op = '<'
+            comp_op_str = '작은'
+        
+        q_str = ''
+        ans = list(arr)
+        
+        for idx in range(num_q):
+            idxs = np.random.choice(num, 2, replace = False)
+            if np.random.rand() >= .5: # in case bigger
+                q_str += '%s %s는 %s %s보다 큽니다. ' %(kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
+                ans = switch(ans, idxs[0], idxs[1])
+                
+                if idx == 0: eq = 'SWITCH(%s, %d, %d)' %(arr, idxs[0], idxs[1])
+                else: eq = 'SWITCH(%s, %d, %d)' %(eq, idxs[0], idxs[1])
+                
+            else: # in case smaller
+                q_str += '%s %s는 %s %s보다 작습니다. ' %(kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
+                ans = switch(ans, idxs[1], idxs[0])
+        
+                if idx == 0: eq = 'SWITCH(%s, %d, %d)' %(arr, idxs[0], idxs[1])
+                else: eq = 'SWITCH(%s, %d, %d)' %(eq, idxs[1], idxs[0])
+        
+        if comp_op == '>':
+            eq = 'ARGMAX(%s)' %(eq)
+            ans = kor_b[argmax(ans)]
+        else:
+            eq = 'ARGMIN(%s)' %(eq)
+            ans = kor_b[argmin(ans)]
+            
+
+        que = '%s %d개의 %s가 있습니다. %s크기가 가장 %s %s는 무엇입니까?' \
+              % (kor_b_str, num, obj_name, q_str, comp_op_str, obj_name)
+
+        return que, eq, ans
+
+    def __get_problem09_03__(self):
+        n = self.__get_value__(2, 7)
+        str_vs, vs = self.__get_value_array__(0, 15, n, dtype='float')
+        th = self.__get_float_value__(0, 5)
+        
+        if np.random.rand() >= .5:
+            comp_op_str = '큰'
+            eq = 'len(CMP(%s, %.2f))' % (vs, th)
+            ans = '%s' % (len(compare(vs, th)))
+        else:
+            comp_op_str = '작은'
+            eq = 'len(%d - CMP(%s, %.2f))' % (n, vs, th)
+            ans = '%s' % (n - len(compare(vs, th)))
+
+        p = np.random.rand()
+        if p < 0.25:
+            que = '%d개의 수 %s이 있습니다. 이중에서 %.2f보다 %s 수는 모두 몇 개입니까?' \
+                  % (n, str_vs, th, comp_op_str)
+        elif p < .5:
+            que = '%d개의 소수 %s가 놓여있습니다. 이중에서 %.2f보다 %s 소수는 모두 몇 개입니까?' \
+                  % (n, str_vs, th, comp_op_str)
+        elif p < .75:
+            que = '%d개의 수 %s이 주어졌습니다. 이중에서 %.2f보다 %s 수는 모두 몇 개 있습니까?' \
+                  % (n, str_vs, th, comp_op_str)
+        else:
+            que = '%d개의 수 %s이 있다. 이중에서 %.2f보다 %s 수는 모두 몇 개입니까?' \
+                  % (n, str_vs, th, comp_op_str)
+        
+        return que, eq, ans
+        
 if __name__ == '__main__':
     mwp_dataset = MWPDataset()
     data_loader = DataLoader(mwp_dataset, batch_size=1, shuffle=False, num_workers=0)
@@ -579,4 +721,3 @@ if __name__ == '__main__':
                        #'Answer': answer_list})
                        'Answer' : np.array(answer_list).reshape(-1)})
     df.to_csv('train.csv', index=False, encoding='euc-kr')
-
