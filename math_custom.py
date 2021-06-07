@@ -80,3 +80,14 @@ def argmin(arr):
             val = idx + 1
     return val
 
+
+def flatten(list_arr):
+    return sum(list_arr, [])
+
+def find_str_pattern(arr, pat=5):
+    count_ = [idx for idx in range(1, len(arr) * 2) if arr[idx:idx+pat] == arr[:pat]]
+    return arr[:count_[0]]
+    
+def patternize(arr):
+    return sum(itertools.repeat(arr, 100), [])    
+    
