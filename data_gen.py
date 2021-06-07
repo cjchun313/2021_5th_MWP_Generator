@@ -38,10 +38,13 @@ class MWPDataset(Dataset):
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
                          '4-3': self.__get_problem04_03__,
+                         '8-1': self.__get_problem08_01__,
+                         '8-2': self.__get_problem08_02__,
+                         '8-3': self.__get_problem08_03__,
                          '9-1': self.__get_problem09_01__,
                          '9-2': self.__get_problem09_02__,
-                         '9-3': self.__get_problem09_03__}
-                         
+                         '9-3': self.__get_problem09_03__,}
+        
     def __len__(self):
         return self.max_len
 
@@ -69,13 +72,22 @@ class MWPDataset(Dataset):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
         n0, n1 = random.sample(name, 2)
         return n0, n1
+    def __get_name2_2__(self):
+        name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
+        n0, n1 = random.sample(name, 2)
+        return n0, n1
 
     ''' 중복안되게 이름 세개 임의적으로 추출 '''
     def __get_name3__(self):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
         n0, n1, n2 = random.sample(name, 3)
         return n0, n1, n2
-
+    
+    def __get_name3_2__(self):
+        name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
+        n0, n1, n2 = random.sample(name, 4)
+        return n0, n1, n2
+        
     ''' 중복안되게 이름 네개 임의적으로 추출 '''
     def __get_name4__(self):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
@@ -86,7 +98,16 @@ class MWPDataset(Dataset):
         name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
         n0, n1, n2, n3 = random.sample(name, 4)
         return n0, n1, n2, n3
+    
+    ''' 중복안되게 이름 네개 임의적으로 추출 '''
+    def __get_name_n__(self, num):
+        name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
+        return np.random.choice(name, num, replace = False)
 
+    def __get_name_n_2__(self, num):
+        name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
+        return np.random.choice(name, num, replace = False)
+    
     def __get_ordinal__(self, idx):
         # number = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세', '열네', '열다섯', \
         #           '열여섯', '열일곱', '열여덟', '열아홉', '스무', '스물한', '스물두', '스물세', '스물네', '스물다섯', '스물여섯', \
@@ -132,14 +153,14 @@ class MWPDataset(Dataset):
 
     def __get_color__(self):
         color = ['빨간', '주황', '노란', '초록', '파란', '흰', '검은', '보라']
-        idx = np.random.randint(0, len(food))
+        idx = np.random.randint(0, len(color))
         return color[idx]
     
     def __get_colorname__(self):
         color = ['빨간색', '주황색', '노란색', '초록색', '파란색', '흰색', '검은색', '보라색']
-        idx = np.random.randint(0, len(food))
+        idx = np.random.randint(0, len(color))
         return color[idx]
-
+    
     def __get_kor_bracket_seq__(self, num):
         kor = ['(가)', '(나)', '(다)', '(라)', '(마)', '(바)', '(사)', '(아)', '(자)', '(차)', '(카)', '(타)', '(파)', '(하)']
         str_val = ''
@@ -584,9 +605,112 @@ class MWPDataset(Dataset):
                   % (v, str_vs, n_digit_str)
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    
-    ''' 유형9 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''' 유형8 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem08_01__(self):
+        n = self.__get_value__(5, 15)
+        init = self.__get_value__(1, 5)
+        interval = self.__get_value__(1, 5)
+        
+        ans_idx = self.__get_value__(10, 150)
+        
+        arr = list(range(init, init + 200))[::interval]
+        arr = arr[:n]
+        arr = sum(itertools.repeat(arr, 2), [])
+        
+        str_arr = ', '.join(str(e) for e in arr)
+        eq = 'PATCOM(STRPAT(%s))[%d]' %(arr, ans_idx - 1)
+        ans = '%d' %(patternize(find_str_pattern(arr))[ans_idx - 1])
 
+        p = np.random.rand()
+        if p < 0.25:
+            que = '%s과 같이 반복되는 수열이 있습니다. 왼쪽에서 %d번째 숫자는 무엇입니까?' \
+                  % (str_arr, ans_idx)
+        elif p < .5:
+            que = '%s과 같이 반복되는 숫자배열이 있습니다. 왼쪽에서 %d번째 숫자는 무엇입니까?' \
+                  % (str_arr, ans_idx)
+        elif p < .75:
+            que = '%s과 같이 반복되는 수열이 있습니다. 왼쪽에서 %d번째 수는 무엇입니까?' \
+                  % (str_arr, ans_idx)
+        else:
+            que = '%s과 같이 반복되는 문자열이 있습니다. 왼쪽에서 %d번째 문자는 무엇입니까?' \
+                  % (str_arr, ans_idx)
+        return que, eq, ans
+
+    def __get_problem08_02__(self):
+        n = self.__get_value__(2, 4)
+        ball_name = self.__get_ball__()
+        ans_idx = self.__get_value__(10, 150)
+        
+        arr = []
+        colors = []
+        q = '왼쪽부터 '
+        for idx in range(n):
+            # balls 개수
+            n_balls = self.__get_value__(2, 7)
+            arr.append(list(itertools.repeat(idx, n_balls)))
+            # color
+            while True:
+                color = self.__get_colorname__()
+                if color not in colors:
+                    colors.append(color)
+                    break
+            q += '%s %s %d개,' %(color, ball_name, n_balls)
+        arr = sum(arr, [])
+        q = q[:-1]
+        
+        eq = 'PATCOM(%s)[%d]' %(arr, ans_idx - 1)
+        ans = '%s' %(colors[patternize(arr)[ans_idx - 1]])
+
+        p = np.random.rand()
+        if p < 0.25:
+            que = '%s가 반복되어 놓여 있습니다. 왼쪽에서 %d번째 공의 색깔을 쓰시오.' \
+                  % (q, ans_idx)
+        elif p < .5:
+            que = '%s가 반복되어 있습니다. %d번째 공의 색깔은 무엇입니까?' \
+                  % (q, ans_idx)
+        elif p < .75:
+            que = '%s가 반복되어 놓여 있습니다. %d번째 공의 색깔은 무엇입니까?' \
+                  % (q, ans_idx)
+        else:
+            que = '%s가 반복되어 있습니다. %d번째 공의 색깔을 쓰시오.' \
+                  % (q, ans_idx)
+        return que, eq, ans
+        
+    def __get_problem08_03__(self):
+        n_people = self.__get_value__(2, 4)
+        names = self.__get_name_n_2__(n_people)
+        n_max = self.__get_value__(50, 150)
+        ans_idx = self.__get_value__(20, n_max)
+        n_foods = self.__get_value__(2, 8)
+        food_name = self.__get_food__()
+        
+        arr = []
+        names_str = ''
+        for idx in range(n_people):
+            arr.append(list(itertools.repeat(idx, n_foods)))
+            names_str += '%s,' %(names[idx])
+        arr = sum(arr, [])
+        names_str = names_str[:-1]
+        
+        eq = 'PATCOM(%s)[%d]' %(arr, ans_idx - 1)
+        ans = '%s' %(names[patternize(arr)[ans_idx - 1]])
+
+        p = np.random.rand()
+        if p < 0.25:
+            que = '%d개의 %s를 %s %d명에게 순서대로 %d개씩 나누어 줍니다. %d번째 %s을 받는 사람은 누구입니까?' \
+                  % (n_max, food_name, names_str, n_people, n_foods, ans_idx, food_name)
+        elif p < .5:
+            que = '%d개의 %s를 %s %d명에게 차례대로 %d개씩 분배합니다. %d번째 받는 사람은 누구입니까?' \
+                  % (n_max, food_name, names_str, n_people, n_foods, ans_idx)
+        elif p < .75:
+            que = '%d개의 %s를 %s %d명에게 순서대로 %d개씩 나눠줬습니다. %d번째 %s을 받는 사람은 누구입니까?' \
+                  % (n_max, food_name, names_str, n_people, n_foods, ans_idx, food_name)
+        else:
+            que = '%d개의 %s를 %s %d명에게 순서대로 %d개씩 나누어주면, %d번째 받는 사람은 누구입니까?' \
+                  % (n_max, food_name, names_str, n_people, n_foods, ans_idx)
+        return que, eq, ans
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''' 유형9 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem09_01__(self):
         n0, n1 = self.__get_name2__()
         ns = [n0[0:2], n1[0:2]]
@@ -721,3 +845,4 @@ if __name__ == '__main__':
                        #'Answer': answer_list})
                        'Answer' : np.array(answer_list).reshape(-1)})
     df.to_csv('train.csv', index=False, encoding='euc-kr')
+
