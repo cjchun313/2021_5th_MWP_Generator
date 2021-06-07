@@ -54,14 +54,17 @@ def compare(x0, x1):
             if x0[idx] > x1:
                 val.append(idx)
         return val
- 
-def switch_bigger(arr, i0, i1):
+
+def switch(arr, i0, i1):
     if arr[i0] < arr[i1]: arr[i0], arr[i1] = arr[i1], arr[i0]
     return arr
-
-def switch_smaller(arr, i0, i1):
-    if arr[i0] > arr[i1]: arr[i0], arr[i1] = arr[i1], arr[i0]
-    return arr
+# def switch_bigger(arr, i0, i1):
+#     if arr[i0] < arr[i1]: arr[i0], arr[i1] = arr[i1], arr[i0]
+#     return arr
+# 
+# def switch_smaller(arr, i0, i1):
+#     if arr[i0] > arr[i1]: arr[i0], arr[i1] = arr[i1], arr[i0]
+#     return arr
 
 def argmax(arr):
     val = 0
@@ -76,3 +79,4 @@ def argmin(arr):
         if arr[idx + 1] < arr[idx]:
             val = idx + 1
     return val
+
