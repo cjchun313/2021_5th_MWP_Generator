@@ -164,7 +164,7 @@ class MWPDataset(Dataset):
             name = ['가장', '1번째로', '2번째로', '3번째로']
         elif max == 4:                        
             name = ['가장', '1번째로', '2번째로', '3번째로', '4번째로']
-		idx = np.random.randint(0, len(name))
+        idx = np.random.randint(0, len(name))
         if idx <= 2:
             ord_idx = 0
         elif idx <= 4:
