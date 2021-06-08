@@ -27,7 +27,8 @@ class MWPDataset(Dataset):
         torch.manual_seed(self.seed)
         if DEVICE == 'cuda':
             torch.cuda.manual_seed(self.seed)
-        
+
+        '''
         self.problems = {'1-1': self.__get_problem01_01__,
                          '1-2': self.__get_problem01_02__,
                          '1-3': self.__get_problem01_03__,
@@ -44,6 +45,11 @@ class MWPDataset(Dataset):
                          '9-1': self.__get_problem09_01__,
                          '9-2': self.__get_problem09_02__,
                          '9-3': self.__get_problem09_03__,}
+        '''
+        self.problems = {'4-1': self.__get_problem04_01__,
+                         '4-2': self.__get_problem04_02__,
+                         '4-3': self.__get_problem04_03__
+                         }
         
     def __len__(self):
         return self.max_len
@@ -526,7 +532,7 @@ class MWPDataset(Dataset):
                 ans = '%d' % (v1 * v2)
             elif op_type == 'avg':
                 eq = '(%d + %d) / 2' % (v1, v2)
-                ans = '%d' % ((v1 + v2) / 2)
+                ans = '%.02f' % ((v1 + v2) / 2)
         else:
             if op_type == 'add':
                 eq = '%.02f + %.02f' % (v1, v2)
