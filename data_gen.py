@@ -18,7 +18,7 @@ DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
 
 
 class MWPDataset(Dataset):
-    def __init__(self, seed=0, max_len=1000):
+    def __init__(self, seed=0, max_len=100):
         self.seed = seed
         self.max_len = max_len
 
@@ -36,6 +36,8 @@ class MWPDataset(Dataset):
                          '2-1': self.__get_problem02_01__,
                          '2-2': self.__get_problem02_02__,
                          '2-3': self.__get_problem02_03__,
+                         '3-1': self.__get_problem03_01__,
+                         '3-2': self.__get_problem03_02__,
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
                          '4-3': self.__get_problem04_03__,
@@ -46,9 +48,8 @@ class MWPDataset(Dataset):
                          '9-2': self.__get_problem09_02__,
                          '9-3': self.__get_problem09_03__,}
         '''
-        self.problems = {'4-1': self.__get_problem04_01__,
-                         '4-2': self.__get_problem04_02__,
-                         '4-3': self.__get_problem04_03__
+        self.problems = {'3-1': self.__get_problem03_01__,
+                         '3-2': self.__get_problem03_02__
                          }
         
     def __len__(self):
@@ -151,6 +152,28 @@ class MWPDataset(Dataset):
         food = ['사과', '복숭아', '배', '참외', '포도', '딸기', '바나나', '옥수수', '토마토', '오이', '배추', '무', '과자', '음료수', '주스', '우유', '감', '수박', '귤', '당근', '라면', '사탕', '김밥', '달걀']
         idx = np.random.randint(0, len(food))
         return food[idx]
+
+    def __get_fruit1__(self):
+        name = ['사과', '배', '감', '귤', '포도', '수박', '참외', '복숭아', '딸기', '오렌지', '자두', '체리', '바나나', '레몬', '키위', '살구', '파일애플',
+                '석류', '매실']
+        n0 = random.sample(name, 1)
+        return n0[0]
+
+    def __get_fruit8__(self):
+        name = ['사과', '배', '감', '귤', '포도', '수박', '참외', '복숭아', '딸기', '오렌지', '자두', '체리', '바나나', '레몬', '키위', '살구', '파일애플',
+                '석류', '매실']
+        n0, n1, n2, n3, n4, n5, n6, n7 = random.sample(name, 8)
+        return n0, n1, n2, n3, n4, n5, n6, n7
+
+    def __get_animal__(self):
+        subject = ['오리', '닭', '토끼', '물고기', '고래', '거위', '개구리', '강아지', '고양이', '비둘기', '병아리', '원숭이', '코끼리', '양', '소', '돼지',
+                   '쥐']
+        idx = np.random.randint(0, len(subject))
+        return subject[idx]
+
+    def my_nCr(self, n, r):
+        f = math.factorial
+        return f(n) / f(r) / f(n-r)
 
     def __get_subject__(self):
         subject = ["국어","영어","수학","사회","과학","음악","미술","체육"]
@@ -420,6 +443,18 @@ class MWPDataset(Dataset):
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+
+
+
+
+
+
+
+
+
+
+
+
     ''' 유형2 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem02_01__(self):
         v0 = self.__get_value__(5, 100)
@@ -498,6 +533,176 @@ class MWPDataset(Dataset):
             que = '키가 큰 %s부터 순서대로 %d명이 한 줄로 서 있고, %s가 앞에서부터 %s 번째에 서 있습니다. 키가 작은 사람부터 순서대로 다시 줄을 서면 %s는 앞에서부터 몇 번째에 서게 될까요?' \
                   % (person, v0, n0, o1, n0)
 
+        return que, eq, ans
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ''' 유형3 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem03_01__(self):
+
+        fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7 = self.__get_fruit8__()
+
+        # eq = '%d × %d' % (v0, v1)
+        # ans = v0 * v1
+
+        p = np.random.rand()
+        if p < 0.2:
+            v0 = self.__get_value__(2, 3)
+            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3} 중에서 {4}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
+            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
+            eq = '4C{}'.format(v0)
+            form = '4 C n0'
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3],v0)))
+
+        elif p < 0.4:
+            v0 = self.__get_value__(2, 4)
+            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4} 중에서 {5}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
+            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
+            eq = '5C{}'.format(v0)
+            form = '5 C n0'
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4],v0)))
+
+        elif p < 0.6:
+            v0 = self.__get_value__(2, 5)
+            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 {6}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, v0))
+            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, v0))
+            eq = '6C{}'.format(v0)
+            form = '6 C n0'
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5],v0)))
+
+        elif p < 0.8:
+            v0 = self.__get_value__(2, 6)
+            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 {7}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6,v0))
+            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6,v0))
+            eq = '7C{}'.format(v0)
+            form = '7 C n0'
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6],v0)))
+
+        else:
+            v0 = self.__get_value__(2, 7)
+            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 {8}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7, v0))
+            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7, v0))
+            eq = '8C{}'.format(v0)
+            form = '8 C n0'
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7],v0)))
+
+        #return que, eq, form, form_que, ans
+        return que, eq, ans
+
+    def __get_problem03_02__(self):
+
+        while (1):
+            fr0 = self.__get_fruit1__()
+            v0 = self.__get_value__(5, 20)
+
+            while (1):
+                v1 = self.__get_value__(2, 10)
+                if v1 <= v0 + 1:
+                    break
+
+            onetwo_list = ['한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열']
+
+            animal0 = self.__get_animal__()
+
+            v2 = self.__get_value__(1, 5)
+
+            # eq = '%d × %d' % (v0, v1)
+            # ans = v0 * v1
+
+            p = np.random.rand()
+            if p < 0.2:
+                change_v1 = onetwo_list[v1 - 1]
+                que = pyjosa.replace_josa(
+                    u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나누어 주려고 합니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 가지 입니까?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                form_que = pyjosa.replace_josa(
+                    u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나누어 주려고 합니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 가지 입니까?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
+                if (v0 - v1 * v2) > v1 + 1:
+                    ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
+                    break
+
+            elif p < 0.4:
+                change_v1 = onetwo_list[v1 - 1]
+                que = pyjosa.replace_josa(
+                    u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나누어 주려고 합니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 가지 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                form_que = pyjosa.replace_josa(
+                    u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나누어 주려고 합니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 가지 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
+                if (v0 - v1 * v2) > v1 + 1:
+                    ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
+                    break
+
+            elif p < 0.6:
+                change_v1 = onetwo_list[v1 - 1]
+                que = pyjosa.replace_josa(
+                    u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 최소 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                form_que = pyjosa.replace_josa(
+                    u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 최소 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
+                if (v0 - v1 * v2) > v1 + 1:
+                    ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
+                    break
+
+            elif p < 0.8:
+                change_v1 = onetwo_list[v1 - 1]
+                que = pyjosa.replace_josa(
+                    u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                form_que = pyjosa.replace_josa(
+                    u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
+                if (v0 - v1 * v2) > v1 + 1:
+                    ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
+                    break
+
+            else:
+                change_v1 = onetwo_list[v1 - 1]
+                que = pyjosa.replace_josa(
+                    u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                form_que = pyjosa.replace_josa(
+                    u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
+                        fr0, \
+                        v0, change_v1, animal0, v2))
+                eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
+                if (v0 - v1 * v2) > v1 + 1:
+                    ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
+                    break
+        form = "( n0 - n1 * n2 + 1 ) C ( n1 - 1)"
+        #return que, eq, form, form_que, ans
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
