@@ -41,6 +41,9 @@ class MWPDataset(Dataset):
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
                          '4-3': self.__get_problem04_03__,
+                         '6-1': self.__get_problem06_01__,
+                         '6-3': self.__get_problem06_03__,
+                         '6-4': self.__get_problem06_04__,
                          '8-1': self.__get_problem08_01__,
                          '8-2': self.__get_problem08_02__,
                          '8-3': self.__get_problem08_03__,
@@ -48,8 +51,9 @@ class MWPDataset(Dataset):
                          '9-2': self.__get_problem09_02__,
                          '9-3': self.__get_problem09_03__,}
         '''
-        self.problems = {'3-1': self.__get_problem03_01__,
-                         '3-2': self.__get_problem03_02__
+        self.problems = {'6-1': self.__get_problem06_01__,
+                         '6-3': self.__get_problem06_03__,
+                         '6-4': self.__get_problem06_04__
                          }
         
     def __len__(self):
@@ -66,6 +70,10 @@ class MWPDataset(Dataset):
 
     def __get_value__(self, min, max):
         return np.random.randint(min, max)
+
+    def __get_value3__(self, min, max):
+        num_list = list(range(min, max))
+        return random.sample(num_list, 3)
 
     ''' 이름 하나 임의적으로 추출 '''
     def __get_name__(self):
@@ -174,6 +182,11 @@ class MWPDataset(Dataset):
     def my_nCr(self, n, r):
         f = math.factorial
         return f(n) / f(r) / f(n-r)
+
+    def __get_cal__(self):
+        cal_list = ['합', '차']
+        idx = np.random.randint(0, len(cal_list))
+        return cal_list[idx]
 
     def __get_subject__(self):
         subject = ["국어","영어","수학","사회","과학","음악","미술","체육"]
@@ -661,12 +674,10 @@ class MWPDataset(Dataset):
                 change_v1 = onetwo_list[v1 - 1]
                 que = pyjosa.replace_josa(
                     u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 최소 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 form_que = pyjosa.replace_josa(
                     u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 최소 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
                 if (v0 - v1 * v2) > v1 + 1:
                     ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
@@ -676,12 +687,10 @@ class MWPDataset(Dataset):
                 change_v1 = onetwo_list[v1 - 1]
                 que = pyjosa.replace_josa(
                     u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 form_que = pyjosa.replace_josa(
                     u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
                 if (v0 - v1 * v2) > v1 + 1:
                     ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
@@ -691,12 +700,10 @@ class MWPDataset(Dataset):
                 change_v1 = onetwo_list[v1 - 1]
                 que = pyjosa.replace_josa(
                     u"{0} {1}개를 서로 다른 {2} 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} {4}개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 form_que = pyjosa.replace_josa(
                     u"{0} n0개를 서로 다른 n1 마리의 {3}에게 나눠줍니다. {3}(은)는 적어도 {0} n2개는 받습니다. {0}(을)를 나누어 주는 방법은 모두 몇 개 일까요?".format(
-                        fr0, \
-                        v0, change_v1, animal0, v2))
+                        fr0, v0, change_v1, animal0, v2))
                 eq = '{}C{}'.format((v0 - v1 * v2 + 1), v1 - 1)
                 if (v0 - v1 * v2) > v1 + 1:
                     ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
@@ -705,6 +712,25 @@ class MWPDataset(Dataset):
         #return que, eq, form, form_que, ans
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ''' 유형4 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem04_01__(self):
@@ -818,6 +844,214 @@ class MWPDataset(Dataset):
                   % (v, str_vs, n_digit_str)
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ''' 유형6 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem06_01__(self):
+        while True:
+            v0, v1, v2 = self.__get_value3__(1, 100)
+            calculation0 = self.__get_cal__()
+
+            p = np.random.rand()
+            if p < 0.5:
+                if calculation0 == '합':
+                    eq = f"{v2} - {v1} + {v0}"
+                    form = "n2 - n1 + n0"
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
+                    ans = v2-v1+v0
+                elif calculation0 == '차':
+                    eq = f"{v2} + {v1} - {v0}"
+                    form = "n2 + n1 - n0"
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
+                    ans = v2+v1-v0
+            else:
+                if calculation0 == '합':
+                    eq = f"{v2} - {v1} + {v0}"
+                    form = "n2 - n1 + n0"
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
+                    ans = v2-v1+v0
+                elif calculation0 == '차':
+                    eq = f"{v2} + {v1} - {v0}"
+                    form = "n2 + n1 - n0"
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
+                    ans = v1+v2-v0
+            if ans >= 1:
+                break
+
+        '''
+        print('que : {}'.format(que))
+        print('form : {}'.format(form))
+        print('eq : {}'.format(eq))
+        print('ans : {}'.format(ans))
+        '''
+
+        #return que, eq, form, ans
+        return que, eq, ans
+
+    def __get_problem06_03__(self):
+        calculation0 = self.__get_cal__()
+        calculation1 = self.__get_cal__()
+        while True:
+            v0, v1, v2 = self.__get_value3__(1, 100)
+
+            if calculation0 == "합":
+                if calculation1 == "합":
+                    eq = f"{v1} - {v0} + {v2}"
+                    form = "n1 - n0 + n2"
+                    ans = v1-v0+v2
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
+                elif calculation1 == "차":
+                    eq = f"{v1} - {v0} - {v2}"
+                    form = "n1 - n0 - n2"
+                    ans = v1-v0-v2
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
+                if ans > 0:
+                    break
+            elif calculation0 == "차":
+                if calculation1 == "합":
+                    eq = f"{v1} + {v0} + {v2}"
+                    form = "n1 + n0 + n2"
+                    ans = v1+v0+v2
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
+                elif calculation1 == "차":
+                    eq = f"{v1} + {v0} - {v2}"
+                    form = "n1 + n0 - n2"
+                    ans = v1+v0-v2
+                    p = np.random.rand()
+                    if p < 0.5:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                    else:
+                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
+                if ans > 0:
+                    break
+
+        '''
+        print('que : {}'.format(que))
+        print('form : {}'.format(form))
+        print('eq : {}'.format(eq))
+        print('ans : {}'.format(ans))
+        '''
+
+        #return que, eq, form, int(ans)
+        return que, eq, int(ans)
+
+    def __get_problem06_04__(self):
+        calculation0 = self.__get_cal__()
+        while True:
+            v0, v1, v2 = self.__get_value3__(2, 11)
+
+            if calculation0 == "합":
+                p = np.random.rand()
+                if p < 0.5:
+                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1, v2))
+                else:
+                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
+                form = "n2 - n1 + n0"
+                eq = f"{v2} - {v1} + {v0}"
+                #eq = f"X+{v1}={v2}, X+{v0}"
+                ans = v2 - v1 + v0
+            elif calculation0 == "차":
+                p = np.random.rand()
+                if p < 0.5:
+                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1, v2))
+                else:
+                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
+                form = "n2 + n1 - n0"
+                eq = f"{v0} + {v2} - {v1}"
+                #eq = f"X-{v1}={v2}, X-{v0}"
+                ans = v0 + v2 - v1
+            # elif calculation0 == "곱":
+            #     que = f"{v0}에 어떤 수를 곱해야 할 것을 잘못하여 {v1}에 어떤 수를 곱했더니 {v1*v2}이 되었습니다. 바르게 계산하면 얼마인지 구하시오."
+            #     form = "n2 / n1 * n0"
+            #     eq = f"{v1}X={v1*v2}, {v0}X"
+            #     ans = v2*v0
+
+            if ans > 0:
+                break
+
+        '''
+        print('que : {}'.format(que))
+        print('form : {}'.format(form))
+        print('eq : {}'.format(eq))
+        print('ans : {}'.format(ans))
+        '''
+
+        #return que, eq, form, ans
+        return que, eq, ans
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ''' 유형8 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem08_01__(self):
         n = self.__get_value__(5, 15)
