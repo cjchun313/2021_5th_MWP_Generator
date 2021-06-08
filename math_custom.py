@@ -3,7 +3,7 @@ import itertools
 
 def lcm(x):
     try:
-        n = len(x0)
+        n = len(x)
     except:
         n = 1
         
@@ -23,7 +23,7 @@ def lcm(x):
 				
 def gcd(x):
     try:
-        n = len(x0)
+        n = len(x)
     except:
         n = 1
         
