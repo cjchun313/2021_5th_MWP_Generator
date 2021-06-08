@@ -509,7 +509,7 @@ class MWPDataset(Dataset):
         o2, o2_idx = self.__get_ordinal2__(np.min([v, 4]))
 
         vs_sorted = np.sort(vs)
-        v1 = vs_sorted[-o1_idx + 1]
+        v1 = vs_sorted[v - 1 - o1_idx]
         v2 = vs_sorted[o2_idx]
 
         op, op_type = self.__get_operation__()
@@ -557,9 +557,11 @@ class MWPDataset(Dataset):
         return que, eq, ans
 
     def __get_problem04_02__(self):
-        pos = self.__get_value__(1, 2)
-        pos_str = self.__get_pos_str__(pos)
+        pos = self.__get_value__(1, 3) # 최대 2자리 이동
+        pos_str = str(pos)
         v = self.__get_float_value__(1, 50)
+        # refine float value
+        v = ((v * 100.) // (10 ** pos - 1)) * (10 ** pos - 1) / 100.
         s1, s2, op = self.__get_shift__()
 
         if op == 'increase':
