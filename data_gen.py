@@ -6,6 +6,7 @@ import pandas as pd
 import itertools
 from math_custom import *
 import pyjosa
+import re
 
 from fractions import Fraction
 from decimal import Decimal
@@ -53,7 +54,8 @@ class MWPDataset(Dataset):
         '''
         self.problems = {'6-1': self.__get_problem06_01__,
                          '6-3': self.__get_problem06_03__,
-                         '6-4': self.__get_problem06_04__
+                         '6-4': self.__get_problem06_04__,
+                         '7-3': self.__get_problem07_03__
                          }
         
     def __len__(self):
@@ -303,6 +305,10 @@ class MWPDataset(Dataset):
             str_op = '평균은'
             op = 'avg'
         return str_op, op
+
+    def __get_sample_value__(self, min, max):
+        num_list = list(range(min, max))
+        return random.sample(num_list, 2)
 
     ''' 유형1 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem01_01__(self):
@@ -848,20 +854,6 @@ class MWPDataset(Dataset):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형6 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem06_01__(self):
         while True:
@@ -1024,6 +1016,83 @@ class MWPDataset(Dataset):
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+    ''' 유형7 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem07_01__(self):
+        while True:
+            v0 = self.__get_value__(1, 10)
+            v1 = self.__get_value__(1, 11)
+            v2, v3 = self.__get_sample_value__(10, 50)
+
+            r0 = "R" + str(v2)
+            r1 = "R" + str(v3)
+            
+            que = f"{v0}, {v0+v1}, {v0+v1*2}, {v0+v1*3}, {v0+v1*4}와 같은 규칙에서 R{v2} 번째 놓일 수와 R{v3} 번째 놓일 수를 각각 A와 B라 할 때, B-A를 구하시오."
+            eq = f"[{v0}, {v0+v1}, {v0+v1*2}, {v0+v1*3}, {v0+v1*4}], X{v3} - X{v2}"
+            ans  = (v3-v2)*v1
+
+            if v2 < v3:
+                break
+        #print('[que] : {}'.format(que))
+        #print('[eq] : {}'.format(eq))
+        #print('[ans] : {}'.format(ans))
+
+        return que, eq, ans
+
+    def __get_problem07_02__(self):
+        v0 = self.__get_value__(1, 100)
+        v1 = self.__get_value__(1, 11)
+        v2 = self.__get_value__(0, 6)
+        # p = np.random.rand()
+        # if p < 1/2:
+
+        sequence_lst = [v0, v0+v1*1, v0+v1*2, v0+v1*3, v0+v1*4, v0+v1*5]
+        
+        sequence_lst.pop(v2)
+        sequence_lst.insert(v2, "A")
+        form_lst = ["n0", "n1", "n2", "n3", "n4", "n5"]
+        form_lst.pop(v2)
+        form_lst.insert(v2, "A")
+        form = "[ "
+        for idx, f in enumerate(form_lst):
+            form += f
+            if idx != len(form_lst) - 1:
+                form += ", "
+        else:
+            form += " ]"
+            
+        que = '자연수를 규칙에 따라 {}로 배열하였습니다. A에 알맞은 수를 구하시오.'.format(re.sub("\'","",str(sequence_lst))[1:-1])
+        eq = "[ " + re.sub("\'","",str(sequence_lst))[1:-1] + " ]"
+        ans = v0+v1*v2
+        print('[que] : {}'.format(que))
+        print('[eq] : {}'.format(eq))
+        print('[ans] : {}'.format(ans))
+        return que, eq, ans
+
+    def __get_problem07_03__(self):
+        v0 = self.__get_value__(1, 10)
+        v1 = self.__get_value__(7, 14)
+        num = ['0', '첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세']
+        # p = np.random.rand()
+        # if p < 1/2:
+        sequence_lst = [v0, v0+2**2, v0+2**2+3**2, v0+2**2+3**2+4**2, v0+2**2+3**2+4**2+5**2, v0+2**2+3**2+4**2+5**2+6**2]
+        sequence_lst = str(sequence_lst)[1:-1]
+        que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format(sequence_lst, v1)
+        form_que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format('n0, n1, n2, n3, n4, n5', v1)
+        # print(que)
+        eq = sequence_lst + f", R{v1}"
+        # print(eq)
+        form = f'[ n0, n1, n2, n3, n4, n5 ] , R{v1}'
+        # print(form)
+        ans = v0
+        for i in range(2, v1):
+            ans += i**2
+        
+        print('que : {}'.format(que))
+        print('eq : {}'.format(eq))
+        print('ans : {}'.format(ans))
+
+        return que, eq, ans
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
 
@@ -1286,7 +1355,6 @@ if __name__ == '__main__':
         equation_list.append(eq[0])
         #answer_list.append(ans.detach().cpu().numpy())
         answer_list.append(ans[0])
-
     df = pd.DataFrame({'Question': question_list,
                        'Equation': equation_list,
                        #'Answer': answer_list})
