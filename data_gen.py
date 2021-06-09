@@ -77,6 +77,11 @@ class MWPDataset(Dataset):
         num_list = list(range(min, max))
         return random.sample(num_list, 3)
 
+    def __get_eq_5_1_ans__(self):
+        v0 = np.random.randint(10,90)
+        v1 = np.random.randint(10,100 - v0)
+        return v0, v1
+
     ''' 이름 하나 임의적으로 추출 '''
     def __get_name__(self):
         # name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
@@ -849,6 +854,43 @@ class MWPDataset(Dataset):
             que = '%d 개의 수 %s로 나누어 떨어질 수 있는 %s자리 수는 모두 몇 개 있습니까?' \
                   % (v, str_vs, n_digit_str)
         return que, eq, ans
+
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+    ''' 유형5 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem05_01__(self):
+        v0, v1 = self.__get_eq5ans__()
+        alpha = ['A','B']
+        op = random.sample([['덧셈','+-',v0,v1],['뺄셈','-+']+sorted([v0,v1])[::-1]],1)[0]
+        op.append(eval('{}{}{}'.format(op[2],op[1][0],op[3])))
+        op[2] = 'A' + str(op[2])[1]
+        op[3] = str(op[3])[0] + 'B'
+
+        que = "두 자리 수의 {0}식 {1}{2}{3}={4}'에서 A에 해당하는 숫자를 쓰시오".format(op[0],op[2],op[1][0],op[3],op[4])
+        eq = 'A = ({} // {}) {} ({} // {}) {} ({}) // {}'.format(op[-1],10,op[1][1],int(op[3][0])*10,10,op[1][1],'10%s%d%s%d'%(op[1][1],op[-1]%10,op[1][0],int(op[2][1])),10)
+        ans = eval(eq[4:])
+        return que, eq, ans
+    
+    def __get_problem05_02__(self):
+        v0 = self.__get_value__(3,10)
+        que = "A를 %d로 나누면 몫은 B이고 나머지는 C가 됩니다. A, B, C는 자연수입니다. 이 식에서 몫과 나머지가 같습니다. 나누어지는 수 A 중 가장 큰 수를 구하시오."%v0
+        eq = 'A = (%d - 1) * %d + (%d - 1)'%(v0,v0,v0)
+        ans = eval(eq[4:])
+        return que, eq, ans
+    
+    def __get_problem05_03__(self):
+        v0 = self.__get_value__(1,10) # value of B
+        v1 = self.__get_value__(1,10) # ratio of A to B
+        que = "서로 다른 두 자연수 A, B가 있습니다. 'A+B=%d', 'A=%s'일 때, A를 구하시오."%((v1+1)*v0,'+'.join(['B']*v1))
+        eq = 'A = %d * v1 / (v1 + 1)'%((v1+1)*v0, v1)
+        ans = eval(int(eq[4:]))
+
+
+
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
