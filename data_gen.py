@@ -42,9 +42,15 @@ class MWPDataset(Dataset):
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
                          '4-3': self.__get_problem04_03__,
+                         '5-1': self.__get_problem05_01__,
+                         '5-2': self.__get_problem05_02__,
+                         '5-3': self.__get_problem05_03__,
                          '6-1': self.__get_problem06_01__,
                          '6-3': self.__get_problem06_03__,
                          '6-4': self.__get_problem06_04__,
+                         '7-1': self.__get_problem07_01__,
+                         '7-2': self.__get_problem07_02__,
+                         '7-3': self.__get_problem07_03__,
                          '8-1': self.__get_problem08_01__,
                          '8-2': self.__get_problem08_02__,
                          '8-3': self.__get_problem08_03__,
@@ -52,10 +58,9 @@ class MWPDataset(Dataset):
                          '9-2': self.__get_problem09_02__,
                          '9-3': self.__get_problem09_03__,}
         '''
-        self.problems = {'6-1': self.__get_problem06_01__,
-                         '6-3': self.__get_problem06_03__,
-                         '6-4': self.__get_problem06_04__,
-                         '7-3': self.__get_problem07_03__
+        self.problems = {'9-1': self.__get_problem09_01__,
+                         '9-2': self.__get_problem09_02__,
+                         '9-3': self.__get_problem09_03__
                          }
         
     def __len__(self):
@@ -315,6 +320,11 @@ class MWPDataset(Dataset):
         num_list = list(range(min, max))
         return random.sample(num_list, 2)
 
+
+
+
+
+
     ''' 유형1 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem01_01__(self):
         v0 = self.__get_value__(0, 100)
@@ -342,8 +352,8 @@ class MWPDataset(Dataset):
         return que, eq, ans
 
     def __get_problem01_02__(self):
-        v0 = self.__get_value__(1, 90)
-        v1 = self.__get_value__(v0+10, 200)
+        v0 = self.__get_value__(1, 50)
+        v1 = self.__get_value__(v0+10, 100)
 
         odis0 = self.__get_odis__()
 
@@ -1059,6 +1069,93 @@ class MWPDataset(Dataset):
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     ''' 유형7 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    def __get_problem07_01__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
+        a = self.__get_value__(1, 21)
+        b = self.__get_value__(1, 21)
+        arr_len = self.__get_value__(5, 8)
+
+        soa = self.__get_value__(10, 31)
+        eoa = self.__get_value__(soa + 1, 51)
+
+        arr = list(range(b, b + a * arr_len + 2))[::a]
+        arr = arr[:arr_len]
+
+        str_arr = ', '.join(str(e) for e in arr)
+        p = np.random.rand()
+        if p <= .5:
+            op = '+';
+            op_str = '합을'
+            eq = '((%d - %d) * %d) + %d + ((%d - %d) * %d) + %d' % (
+            arr[1], arr[0], eoa, arr[0], arr[1], arr[0], soa, arr[0])
+            ans = '%d' % ((a * eoa + b) + (a * soa + b))
+        else:
+            op = '-';
+            op_str = '차를'
+            eq = '((%d - %d) * %d) + %d - ((%d - %d) * %d) + %d' % (
+            arr[1], arr[0], eoa, arr[0], arr[1], arr[0], soa, arr[0])
+            ans = '%d' % ((a * eoa + b) - (a * soa + b))
+
+        if p <= 0.5:  # operation version
+            ques = ['%s와 같은 규칙에서 %d번째 놓일 수와 %d번째 놓일 수를 각각 A와 B라 할 때, B%sA를 구하시오.',
+                    '%s와 같은 규칙적인 수열에서 %d번째 놓일 수와 %d번째 놓일 숫자를 각각 A와 B라 할 때, B%sA를 구하시오.', ]
+            que = np.random.choice(ques) % (str_arr, soa, eoa, op)
+        else:  # string version
+            ques = ['%s와 같은 규칙에서 %d번째 놓일 수와 %d번째 놓일 수를 각각 A와 B라 할 때, A와 B의 %s 구하시오.',
+                    '%s와 같은 규칙적인 배열에서 %d번째 놓일 수와 %d번째 놓일 숫자를 각각 A와 B라 할 때, A와 B의 %s 구하시오.', ]
+            que = np.random.choice(ques) % (str_arr, soa, eoa, op_str)
+
+        return que, eq, ans
+
+    def __get_problem07_02__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
+        a = self.__get_value__(1, 21)
+        b = self.__get_value__(1, 21)
+        arr_len = self.__get_value__(5, 8)
+        var0 = b = self.__get_value__(65, 69)
+
+        pos = self.__get_value__(3, arr_len)
+
+        arr = list(range(b, b + a * arr_len + 2))[::a]
+        arr = arr[:arr_len]
+
+        str_arr = arr
+        str_arr[pos] = chr(var0)
+        str_arr = ', '.join(str(e) for e in arr)
+
+        eq = '((%d - %d) * %d) + %d' % (arr[1], arr[0], pos, arr[0])
+        ans = '%d' % ((a * pos + b))
+
+        ques = ['자연수를 규칙에 따라 %s로 배열하였습니다. %s에 알맞은 수를 구하시오.',
+                '%s와 같은 규칙에서 %s에 알맞은 수를 구하시오.',
+                '일정한 규칙에 따라 자연수를 %s로 배열하였습니다. %s에 알맞은 수를 구하시오.',
+                '자연수를 특정한 규칙에 따라 %s로 배열하였습니다. %s에 알맞은 숫자는 무엇인가요?', ]
+        que = np.random.choice(ques) % (str_arr, chr(var0))
+
+        return que, eq, ans
+
+    def __get_problem07_03__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
+        a = self.__get_value__(1, 21)
+        b = self.__get_value__(1, 21)
+        arr_len = self.__get_value__(5, 8)
+
+        pos = self.__get_value__(arr_len, 101)
+
+        arr = list(range(b, b + a * arr_len + 2))[::a]
+        arr = arr[:arr_len]
+
+        str_arr = ', '.join(str(e) for e in arr)
+
+        eq = '((%d - %d) * %d) + %d' % (arr[1], arr[0], pos, arr[0])
+        ans = '%d' % ((a * pos + b))
+
+        ques = ['자연수를 규칙에 따라 %s로 배열하였습니다. %d번째에 알맞은 수를 구하시오.',
+                '%s와 같은 규칙에서 %d번째에 알맞은 수를 구하시오.',
+                '일정한 규칙에 따라 자연수를 %s로 배열하였습니다. %d번째에 알맞은 수를 구하시오.',
+                '자연수를 특정한 규칙에 따라 %s로 배열하였습니다. %d번째에 알맞은 숫자는 무엇인가요?', ]
+        que = np.random.choice(ques) % (str_arr, pos)
+
+        return que, eq, ans
+
+    '''
     def __get_problem07_01__(self):
         while True:
             v0 = self.__get_value__(1, 10)
@@ -1134,7 +1231,25 @@ class MWPDataset(Dataset):
         print('ans : {}'.format(ans))
 
         return que, eq, ans
+    '''
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     ''' 유형8 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -1242,6 +1357,27 @@ class MWPDataset(Dataset):
                   % (n_max, food_name, names_str, n_people, n_foods, ans_idx)
         return que, eq, ans
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ''' 유형9 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     def __get_problem09_01__(self):
         n0, n1 = self.__get_name2__()
@@ -1356,6 +1492,9 @@ class MWPDataset(Dataset):
                   % (n, str_vs, th, comp_op_str)
         
         return que, eq, ans
+
+
+
         
 if __name__ == '__main__':
     mwp_dataset = MWPDataset()
