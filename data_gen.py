@@ -11,6 +11,8 @@ import re
 from fractions import Fraction
 from decimal import Decimal
 
+from our_json import write_true_json
+
 import torch
 from torch.utils.data import Dataset, DataLoader
 
@@ -19,7 +21,7 @@ DEVICE = torch.device('cuda' if USE_CUDA else 'cpu')
 
 
 class MWPDataset(Dataset):
-    def __init__(self, seed=0, max_len=100):
+    def __init__(self, seed=2, max_len=10000):
         self.seed = seed
         self.max_len = max_len
 
@@ -37,24 +39,42 @@ class MWPDataset(Dataset):
                          '2-1': self.__get_problem02_01__,
                          '2-2': self.__get_problem02_02__,
                          '2-3': self.__get_problem02_03__,
-                         '3-1': self.__get_problem03_01__,
-                         '3-2': self.__get_problem03_02__,
+                         '3-1': self.__get_problem03_01__, ##
+                         '3-2': self.__get_problem03_02__, ##
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
-                         '4-3': self.__get_problem04_03__,
+                         '4-3': self.__get_problem04_03__, ##
+                         '5-1': self.__get_problem05_01__,
+                         '5-2': self.__get_problem05_02__,
+                         '5-3': self.__get_problem05_03__,
                          '6-1': self.__get_problem06_01__,
                          '6-3': self.__get_problem06_03__,
                          '6-4': self.__get_problem06_04__,
-                         '8-1': self.__get_problem08_01__,
-                         '8-2': self.__get_problem08_02__,
-                         '8-3': self.__get_problem08_03__,
-                         '9-1': self.__get_problem09_01__,
-                         '9-2': self.__get_problem09_02__,
-                         '9-3': self.__get_problem09_03__,}
+                         '7-1': self.__get_problem07_01__, #######
+                         '7-2': self.__get_problem07_02__, #######
+                         '7-3': self.__get_problem07_03__, #######
+                         '8-1': self.__get_problem08_01__, ##
+                         '8-2': self.__get_problem08_02__, ##
+                         '8-3': self.__get_problem08_03__, ##
+                         '9-1': self.__get_problem09_01__, ##
+                         '9-2': self.__get_problem09_02__, ##
+                         '9-3': self.__get_problem09_03__,} ##
         '''
-        self.problems = {'5-1': self.__get_problem05_01__,
+        self.problems = {'1-1': self.__get_problem01_01__,
+                         '1-2': self.__get_problem01_02__,
+                         '1-3': self.__get_problem01_03__,
+                         '1-4': self.__get_problem01_04__,
+                         '2-1': self.__get_problem02_01__,
+                         '2-2': self.__get_problem02_02__,
+                         '2-3': self.__get_problem02_03__,
+                         '4-1': self.__get_problem04_01__,
+                         '4-2': self.__get_problem04_02__,
+                         '5-1': self.__get_problem05_01__,
                          '5-2': self.__get_problem05_02__,
-                         '5-3': self.__get_problem05_03__
+                         '5-3': self.__get_problem05_03__,
+                         '6-1': self.__get_problem06_01__,
+                         '6-3': self.__get_problem06_03__,
+                         '6-4': self.__get_problem06_04__
                          }
 
     def __get_eq5ans__(self):
@@ -844,6 +864,12 @@ class MWPDataset(Dataset):
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+
+
+
+
+
+
     ''' 유형5 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     def __get_problem05_01__(self):
@@ -855,28 +881,45 @@ class MWPDataset(Dataset):
         op[3] = str(op[3])[0] + 'B'
 
         que = "두 자리 수의 {0}식 {1}{2}{3}={4}'에서 A에 해당하는 숫자를 쓰시오".format(op[0], op[2], op[1][0], op[3], op[4])
+        '''
         eq = 'A = ({} // {}) {} ({} // {}) {} ({}) // {}'.format(op[-1], 10, op[1][1], int(op[3][0]) * 10, 10, op[1][1],
                                                                  '10%s%d%s%d' % (
                                                                  op[1][1], op[-1] % 10, op[1][0], int(op[2][1])), 10)
-        ans = eval(eq[4:])
+        ans = eval(eq[4:])                                                            
+        '''
+        eq = '({} // {}) {} ({} // {}) {} ({} - 1) // {}'.format(op[-1], 10, op[1][1], int(op[3][0]) * 10, 10, op[1][1],
+                                                                 '10%s%d%s%d' % (
+                                                                     op[1][1], op[-1] % 10, op[1][0], int(op[2][1])), 10)
+        ans = eval(eq)
+
         return que, eq, ans
 
     def __get_problem05_02__(self):
         v0 = self.__get_value__(3, 10)
         que = "A를 %d로 나누면 몫은 B이고 나머지는 C가 됩니다. A, B, C는 자연수입니다. 이 식에서 몫과 나머지가 같습니다. 나누어지는 수 A 중 가장 큰 수를 구하시오." % v0
-        eq = 'A = (%d - 1) * %d + (%d - 1)' % (v0, v0, v0)
-        ans = eval(eq[4:])
+        #eq = 'A = (%d - 1) * %d + (%d - 1)' % (v0, v0, v0)
+        #ans = eval(eq[4:])
+        eq = '(%d - 1) * %d + (%d - 1)' % (v0, v0, v0)
+        ans = eval(eq)
+
         return que, eq, ans
 
     def __get_problem05_03__(self):
         v0 = self.__get_value__(1, 10)  # value of B
         v1 = self.__get_value__(1, 10)  # ratio of A to B
         que = "서로 다른 두 자연수 A, B가 있습니다. 'A+B=%d', 'A=%s'일 때, A를 구하시오." % ((v1 + 1) * v0, '+'.join(['B'] * v1))
-        eq = 'A = %d * %d / (%d + 1)' % ((v1 + 1) * v0, v1, v1)
-        ans = int(eval(eq[4:]))
+        #eq = 'A = %d * %d / (%d + 1)' % ((v1 + 1) * v0, v1, v1)
+        # ans = int(eval(eq[4:]))
+        eq = '%d * %d / (%d + 1)' % ((v1 + 1) * v0, v1, v1)
+        ans = int(eval(eq))
+
         return que, eq, ans
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
 
     ''' 유형6 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -1384,7 +1427,7 @@ class MWPDataset(Dataset):
 
 
 if __name__ == '__main__':
-    mwp_dataset = MWPDataset()
+    mwp_dataset = MWPDataset(seed=1, max_len=10000)
     data_loader = DataLoader(mwp_dataset, batch_size=1, shuffle=False, num_workers=0)
 
     question_list, equation_list, answer_list = [], [], []
@@ -1401,5 +1444,7 @@ if __name__ == '__main__':
                        'Equation': equation_list,
                        # 'Answer': answer_list})
                        'Answer': np.array(answer_list).reshape(-1)})
-    df.to_csv('train.csv', index=False, encoding='euc-kr')
+    df.to_csv('val.csv', index=False, encoding='euc-kr')
+
+    write_true_json(question_list, equation_list, answer_list, write_path='val.json', total_len=10000)
 
