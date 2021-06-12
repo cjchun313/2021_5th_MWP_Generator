@@ -1130,8 +1130,8 @@ class MWPDataset(Dataset):
             r1 = "R" + str(v3)
 
             que = f"{v0}, {v0 + v1}, {v0 + v1 * 2}, {v0 + v1 * 3}, {v0 + v1 * 4}와 같은 규칙에서 R{v2} 번째 놓일 수와 R{v3} 번째 놓일 수를 각각 A와 B라 할 때, B-A를 구하시오."
-            eq = f"[{v0}, {v0 + v1}, {v0 + v1 * 2}, {v0 + v1 * 3}, {v0 + v1 * 4}], X{v3} - X{v2}"
-            ans = (v3 - v2) * v1
+            eq = f"[{v0}, {v0 + v1}, {v0 + v1 * 2}, {v0 + v1 * 3}, {v0 + v1 * 4}], X{v3 + 1} - X{v2 + 1}"
+            ans = ((v3 + 1) - (v2 + 1)) * v1
 
             if v2 < v3:
                 break
@@ -1183,12 +1183,12 @@ class MWPDataset(Dataset):
         que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format(sequence_lst, v1)
         form_que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format('n0, n1, n2, n3, n4, n5', v1)
         # print(que)
-        eq = sequence_lst + f", R{v1}"
+        eq = sequence_lst + f", R{v1 + 1}"
         # print(eq)
         form = f'[ n0, n1, n2, n3, n4, n5 ] , R{v1}'
         # print(form)
         ans = v0
-        for i in range(2, v1):
+        for i in range(2, v1 + 1):
             ans += i ** 2
 
         print('que : {}'.format(que))
