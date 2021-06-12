@@ -42,15 +42,9 @@ class MWPDataset(Dataset):
                          '4-1': self.__get_problem04_01__,
                          '4-2': self.__get_problem04_02__,
                          '4-3': self.__get_problem04_03__,
-                         '5-1': self.__get_problem05_01__,
-                         '5-2': self.__get_problem05_02__,
-                         '5-3': self.__get_problem05_03__,
                          '6-1': self.__get_problem06_01__,
                          '6-3': self.__get_problem06_03__,
                          '6-4': self.__get_problem06_04__,
-                         '7-1': self.__get_problem07_01__,
-                         '7-2': self.__get_problem07_02__,
-                         '7-3': self.__get_problem07_03__,
                          '8-1': self.__get_problem08_01__,
                          '8-2': self.__get_problem08_02__,
                          '8-3': self.__get_problem08_03__,
@@ -58,11 +52,16 @@ class MWPDataset(Dataset):
                          '9-2': self.__get_problem09_02__,
                          '9-3': self.__get_problem09_03__,}
         '''
-        self.problems = {'9-1': self.__get_problem09_01__,
-                         '9-2': self.__get_problem09_02__,
-                         '9-3': self.__get_problem09_03__
+        self.problems = {'5-1': self.__get_problem05_01__,
+                         '5-2': self.__get_problem05_02__,
+                         '5-3': self.__get_problem05_03__
                          }
-        
+
+    def __get_eq5ans__(self):
+        v0 = np.random.randint(10, 90)
+        v1 = np.random.randint(10, 100 - v0)
+        return v0, v1
+
     def __len__(self):
         return self.max_len
 
@@ -70,7 +69,7 @@ class MWPDataset(Dataset):
         num = len(self.problems)
         np.random.seed(idx)
         p = np.random.randint(num)
-        problem_idx = list(self.problems.keys())[p]        
+        problem_idx = list(self.problems.keys())[p]
         sample = self.problems[problem_idx]()
 
         return sample
@@ -83,11 +82,12 @@ class MWPDataset(Dataset):
         return random.sample(num_list, 3)
 
     def __get_eq_5_1_ans__(self):
-        v0 = np.random.randint(10,90)
-        v1 = np.random.randint(10,100 - v0)
+        v0 = np.random.randint(10, 90)
+        v1 = np.random.randint(10, 100 - v0)
         return v0, v1
 
     ''' 이름 하나 임의적으로 추출 '''
+
     def __get_name__(self):
         # name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
@@ -95,27 +95,31 @@ class MWPDataset(Dataset):
         return name[idx]
 
     ''' 중복안되게 이름 두개 임의적으로 추출 '''
+
     def __get_name2__(self):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
         n0, n1 = random.sample(name, 2)
         return n0, n1
+
     def __get_name2_2__(self):
         name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
         n0, n1 = random.sample(name, 2)
         return n0, n1
 
     ''' 중복안되게 이름 세개 임의적으로 추출 '''
+
     def __get_name3__(self):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
         n0, n1, n2 = random.sample(name, 3)
         return n0, n1, n2
-    
+
     def __get_name3_2__(self):
         name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
         n0, n1, n2 = random.sample(name, 4)
         return n0, n1, n2
-        
+
     ''' 중복안되게 이름 네개 임의적으로 추출 '''
+
     def __get_name4__(self):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
         n0, n1, n2, n3 = random.sample(name, 4)
@@ -125,16 +129,17 @@ class MWPDataset(Dataset):
         name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
         n0, n1, n2, n3 = random.sample(name, 4)
         return n0, n1, n2, n3
-    
+
     ''' 중복안되게 이름 네개 임의적으로 추출 '''
+
     def __get_name_n__(self, num):
         name = ['남준이', '석진이', '윤기', '호석이', '지민이', '태형이', '정국이', '민영이', '유정이', '은지', '유나']
-        return np.random.choice(name, num, replace = False)
+        return np.random.choice(name, num, replace=False)
 
     def __get_name_n_2__(self, num):
         name = ['남준', '석진', '윤기', '호석', '지민', '태형', '정국', '민영', '유정', '은지', '유나']
-        return np.random.choice(name, num, replace = False)
-    
+        return np.random.choice(name, num, replace=False)
+
     def __get_ordinal__(self, idx):
         # number = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세', '열네', '열다섯', \
         #           '열여섯', '열일곱', '열여덟', '열아홉', '스무', '스물한', '스물두', '스물세', '스물네', '스물다섯', '스물여섯', \
@@ -169,7 +174,8 @@ class MWPDataset(Dataset):
         return name[idx]
 
     def __get_food__(self):
-        food = ['사과', '복숭아', '배', '참외', '포도', '딸기', '바나나', '옥수수', '토마토', '오이', '배추', '무', '과자', '음료수', '주스', '우유', '감', '수박', '귤', '당근', '라면', '사탕', '김밥', '달걀']
+        food = ['사과', '복숭아', '배', '참외', '포도', '딸기', '바나나', '옥수수', '토마토', '오이', '배추', '무', '과자', '음료수', '주스', '우유', '감',
+                '수박', '귤', '당근', '라면', '사탕', '김밥', '달걀']
         idx = np.random.randint(0, len(food))
         return food[idx]
 
@@ -193,7 +199,7 @@ class MWPDataset(Dataset):
 
     def my_nCr(self, n, r):
         f = math.factorial
-        return f(n) / f(r) / f(n-r)
+        return f(n) / f(r) / f(n - r)
 
     def __get_cal__(self):
         cal_list = ['합', '차']
@@ -201,7 +207,7 @@ class MWPDataset(Dataset):
         return cal_list[idx]
 
     def __get_subject__(self):
-        subject = ["국어","영어","수학","사회","과학","음악","미술","체육"]
+        subject = ["국어", "영어", "수학", "사회", "과학", "음악", "미술", "체육"]
         idx = np.random.randint(0, len(subject))
         return subject[idx]
 
@@ -209,12 +215,12 @@ class MWPDataset(Dataset):
         color = ['빨간', '주황', '노란', '초록', '파란', '흰', '검은', '보라']
         idx = np.random.randint(0, len(color))
         return color[idx]
-    
+
     def __get_colorname__(self):
         color = ['빨간색', '주황색', '노란색', '초록색', '파란색', '흰색', '검은색', '보라색']
         idx = np.random.randint(0, len(color))
         return color[idx]
-    
+
     def __get_kor_bracket_seq__(self, num):
         kor = ['(가)', '(나)', '(다)', '(라)', '(마)', '(바)', '(사)', '(아)', '(자)', '(차)', '(카)', '(타)', '(파)', '(하)']
         str_val = ''
@@ -222,7 +228,7 @@ class MWPDataset(Dataset):
             str_val += '%s, ' % kor[idx]
         str_val += '%s' % kor[num - 1]
         return kor[:num], str_val
-    
+
     def __get_float_value__(self, min, max):
         return np.random.randint(min + .5, max) + (np.random.rand(1)[0] - .5)
 
@@ -320,12 +326,8 @@ class MWPDataset(Dataset):
         num_list = list(range(min, max))
         return random.sample(num_list, 2)
 
-
-
-
-
-
     ''' 유형1 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem01_01__(self):
         v0 = self.__get_value__(0, 100)
         v1 = self.__get_value__(0, 100)
@@ -352,15 +354,15 @@ class MWPDataset(Dataset):
         return que, eq, ans
 
     def __get_problem01_02__(self):
-        v0 = self.__get_value__(1, 50)
-        v1 = self.__get_value__(v0+10, 100)
+        v0 = self.__get_value__(1, 90)
+        v1 = self.__get_value__(v0 + 10, 200)
 
         odis0 = self.__get_odis__()
 
         # eq = '%d + %d' % (v0, v1)
         eq = ''
         ans = 0
-        for i in range(v0, v1+1):
+        for i in range(v0, v1 + 1):
             if odis0 == '홀수' and i % 2 == 1:
                 ans += i
                 eq += str(i) + '+'
@@ -373,7 +375,7 @@ class MWPDataset(Dataset):
         # p = np.random.rand()
         # if p < 0.34:
         que = '%d부터 %d까지의 %s의 합을 구하시오.' \
-                % (v0, v1, odis0)
+              % (v0, v1, odis0)
         return que, eq, ans
 
     def __get_problem01_03__(self):
@@ -475,21 +477,11 @@ class MWPDataset(Dataset):
                     eq = ''
 
         return que, eq, ans
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형2 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem02_01__(self):
         v0 = self.__get_value__(5, 100)
         v1 = self.__get_value__(1, v0 - 2)
@@ -568,27 +560,11 @@ class MWPDataset(Dataset):
                   % (person, v0, n0, o1, n0)
 
         return que, eq, ans
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형3 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem03_01__(self):
 
         fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7 = self.__get_fruit8__()
@@ -599,45 +575,63 @@ class MWPDataset(Dataset):
         p = np.random.rand()
         if p < 0.2:
             v0 = self.__get_value__(2, 3)
-            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3} 중에서 {4}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
-            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
+            que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3} 중에서 {4}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
+            form_que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, v0))
             eq = '4C{}'.format(v0)
             form = '4 C n0'
-            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3],v0)))
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3], v0)))
 
         elif p < 0.4:
             v0 = self.__get_value__(2, 4)
-            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4} 중에서 {5}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
-            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
+            que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4} 중에서 {5}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
+            form_que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, v0))
             eq = '5C{}'.format(v0)
             form = '5 C n0'
-            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4],v0)))
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4], v0)))
 
         elif p < 0.6:
             v0 = self.__get_value__(2, 5)
-            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 {6}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, v0))
-            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, v0))
+            que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 {6}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4,
+                                                                                             fr5, v0))
+            form_que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4,
+                                                                                            fr5, v0))
             eq = '6C{}'.format(v0)
             form = '6 C n0'
-            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5],v0)))
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5], v0)))
 
         elif p < 0.8:
             v0 = self.__get_value__(2, 6)
-            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 {7}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6,v0))
-            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6,v0))
+            que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 {7}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3,
+                                                                                                  fr4, fr5, fr6, v0))
+            form_que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5}, {6} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3,
+                                                                                                 fr4, fr5, fr6, v0))
             eq = '7C{}'.format(v0)
             form = '7 C n0'
-            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6],v0)))
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6], v0)))
 
         else:
             v0 = self.__get_value__(2, 7)
-            que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 {8}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7, v0))
-            form_que = pyjosa.replace_josa(u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7, v0))
+            que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 {8}가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2,
+                                                                                                       fr3, fr4, fr5,
+                                                                                                       fr6, fr7, v0))
+            form_que = pyjosa.replace_josa(
+                u"{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} 중에서 n0가지의 과일을 골라서 사는 경우는 모두 몇 가지입니까?".format(fr0, fr1, fr2,
+                                                                                                      fr3, fr4, fr5,
+                                                                                                      fr6, fr7, v0))
             eq = '8C{}'.format(v0)
             form = '8 C n0'
-            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7],v0)))
+            ans = len(list(itertools.combinations([fr0, fr1, fr2, fr3, fr4, fr5, fr6, fr7], v0)))
 
-        #return que, eq, form, form_que, ans
+        # return que, eq, form, form_que, ans
         return que, eq, ans
 
     def __get_problem03_02__(self):
@@ -730,30 +724,13 @@ class MWPDataset(Dataset):
                     ans = self.my_nCr((v0 - v1 * v2 + 1), v1 - 1)
                     break
         form = "( n0 - n1 * n2 + 1 ) C ( n1 - 1)"
-        #return que, eq, form, form_que, ans
+        # return que, eq, form, form_que, ans
         return que, eq, ans
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형4 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem04_01__(self):
         v = self.__get_value__(2, 6)
 
@@ -815,7 +792,7 @@ class MWPDataset(Dataset):
         return que, eq, ans
 
     def __get_problem04_02__(self):
-        pos = self.__get_value__(1, 3) # 최대 2자리 이동
+        pos = self.__get_value__(1, 3)  # 최대 2자리 이동
         pos_str = str(pos)
         v = self.__get_float_value__(1, 50)
         # refine float value
@@ -846,18 +823,18 @@ class MWPDataset(Dataset):
     def __get_problem04_03__(self):
         v = self.__get_value__(2, 5)
         str_vs, vs = self.__get_value_array__(1, 10, v)
-        
+
         n_digit = self.__get_value__(2, 4)
         n_digit_str = self.__get_pos_str__(n_digit)
-    
-        eq = '(%d - 1) // LCM([%s]) - (%d - 1) // LCM([%s])' %(10**(n_digit), str_vs, 10**(n_digit - 1), str_vs)
-        ans = '%d' %((10**(n_digit) - 1)//lcm(vs) - (10**(n_digit - 1) - 1)//lcm(vs))
-    
+
+        eq = '(%d - 1) // LCM([%s]) - (%d - 1) // LCM([%s])' % (10 ** (n_digit), str_vs, 10 ** (n_digit - 1), str_vs)
+        ans = '%d' % ((10 ** (n_digit) - 1) // lcm(vs) - (10 ** (n_digit - 1) - 1) // lcm(vs))
+
         p = np.random.rand()
-        if p  <  1/3:
+        if p < 1 / 3:
             que = '총 %d개의 수 %s로 나누어떨어지는 %s자리 수는 모두 몇 개 있습니까?' \
                   % (v, str_vs, n_digit_str)
-        elif p < 2/3:
+        elif p < 2 / 3:
             que = '모두 %d개의 수 %s로 나누어 떨어질 수 있는 %s자리 수는 총 몇 개 있니까?' \
                   % (v, str_vs, n_digit_str)
         else:
@@ -867,46 +844,42 @@ class MWPDataset(Dataset):
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
     ''' 유형5 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem05_01__(self):
         v0, v1 = self.__get_eq5ans__()
-        alpha = ['A','B']
-        op = random.sample([['덧셈','+-',v0,v1],['뺄셈','-+']+sorted([v0,v1])[::-1]],1)[0]
-        op.append(eval('{}{}{}'.format(op[2],op[1][0],op[3])))
+        alpha = ['A', 'B']
+        op = random.sample([['덧셈', '+-', v0, v1], ['뺄셈', '-+'] + sorted([v0, v1])[::-1]], 1)[0]
+        op.append(eval('{}{}{}'.format(op[2], op[1][0], op[3])))
         op[2] = 'A' + str(op[2])[1]
         op[3] = str(op[3])[0] + 'B'
 
-        que = "두 자리 수의 {0}식 {1}{2}{3}={4}'에서 A에 해당하는 숫자를 쓰시오".format(op[0],op[2],op[1][0],op[3],op[4])
-        eq = 'A = ({} // {}) {} ({} // {}) {} ({}) // {}'.format(op[-1],10,op[1][1],int(op[3][0])*10,10,op[1][1],'10%s%d%s%d'%(op[1][1],op[-1]%10,op[1][0],int(op[2][1])),10)
+        que = "두 자리 수의 {0}식 {1}{2}{3}={4}'에서 A에 해당하는 숫자를 쓰시오".format(op[0], op[2], op[1][0], op[3], op[4])
+        eq = 'A = ({} // {}) {} ({} // {}) {} ({}) // {}'.format(op[-1], 10, op[1][1], int(op[3][0]) * 10, 10, op[1][1],
+                                                                 '10%s%d%s%d' % (
+                                                                 op[1][1], op[-1] % 10, op[1][0], int(op[2][1])), 10)
         ans = eval(eq[4:])
         return que, eq, ans
-    
+
     def __get_problem05_02__(self):
-        v0 = self.__get_value__(3,10)
-        que = "A를 %d로 나누면 몫은 B이고 나머지는 C가 됩니다. A, B, C는 자연수입니다. 이 식에서 몫과 나머지가 같습니다. 나누어지는 수 A 중 가장 큰 수를 구하시오."%v0
-        eq = 'A = (%d - 1) * %d + (%d - 1)'%(v0,v0,v0)
+        v0 = self.__get_value__(3, 10)
+        que = "A를 %d로 나누면 몫은 B이고 나머지는 C가 됩니다. A, B, C는 자연수입니다. 이 식에서 몫과 나머지가 같습니다. 나누어지는 수 A 중 가장 큰 수를 구하시오." % v0
+        eq = 'A = (%d - 1) * %d + (%d - 1)' % (v0, v0, v0)
         ans = eval(eq[4:])
         return que, eq, ans
-    
+
     def __get_problem05_03__(self):
-        v0 = self.__get_value__(1,10) # value of B
-        v1 = self.__get_value__(1,10) # ratio of A to B
-        que = "서로 다른 두 자연수 A, B가 있습니다. 'A+B=%d', 'A=%s'일 때, A를 구하시오."%((v1+1)*v0,'+'.join(['B']*v1))
-        eq = 'A = %d * v1 / (v1 + 1)'%((v1+1)*v0, v1)
-        ans = eval(int(eq[4:]))
-
-
-
+        v0 = self.__get_value__(1, 10)  # value of B
+        v1 = self.__get_value__(1, 10)  # ratio of A to B
+        que = "서로 다른 두 자연수 A, B가 있습니다. 'A+B=%d', 'A=%s'일 때, A를 구하시오." % ((v1 + 1) * v0, '+'.join(['B'] * v1))
+        eq = 'A = %d * %d / (%d + 1)' % ((v1 + 1) * v0, v1, v1)
+        ans = int(eval(eq[4:]))
+        return que, eq, ans
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
     ''' 유형6 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem06_01__(self):
         while True:
             v0, v1, v2 = self.__get_value3__(1, 100)
@@ -919,38 +892,58 @@ class MWPDataset(Dataset):
                     form = "n2 - n1 + n0"
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0,
+                                                                                                                  v1,
+                                                                                                                  v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
-                    ans = v2-v1+v0
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0,
+                                                                                                                  v1,
+                                                                                                                  v2))
+                    ans = v2 - v1 + v0
                 elif calculation0 == '차':
                     eq = f"{v2} + {v1} - {v0}"
                     form = "n2 + n1 - n0"
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1,
+                                                                                                                v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
-                    ans = v2+v1-v0
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1,
+                                                                                                                v2))
+                    ans = v2 + v1 - v0
             else:
                 if calculation0 == '합':
                     eq = f"{v2} - {v1} + {v0}"
                     form = "n2 - n1 + n0"
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0,
+                                                                                                                   v1,
+                                                                                                                   v2))
                     else:
-                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
-                    ans = v2-v1+v0
+                        que = pyjosa.replace_josa(
+                            u"모르는 수에서 {0}(을)를 더해야 하는데 잘못하여 {1}(을)를 더한 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0,
+                                                                                                                   v1,
+                                                                                                                   v2))
+                    ans = v2 - v1 + v0
                 elif calculation0 == '차':
                     eq = f"{v2} + {v1} - {v0}"
                     form = "n2 + n1 - n0"
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔습니다. 바르게 계산한 결과를 구하시오.".format(v0, v1,
+                                                                                                                 v2))
                     else:
-                        que = pyjosa.replace_josa(u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1, v2))
-                    ans = v1+v2-v0
+                        que = pyjosa.replace_josa(
+                            u"모르는 수에서 {0}(을)를 빼야 하는데 잘못하여 {1}(을)를 뺀 결과가 {2}(이)가 나왔다면, 바르게 계산한 결과는 몇 일까요?".format(v0, v1,
+                                                                                                                 v2))
+                    ans = v1 + v2 - v0
             if ans >= 1:
                 break
 
@@ -961,7 +954,7 @@ class MWPDataset(Dataset):
         print('ans : {}'.format(ans))
         '''
 
-        #return que, eq, form, ans
+        # return que, eq, form, ans
         return que, eq, ans
 
     def __get_problem06_03__(self):
@@ -974,42 +967,50 @@ class MWPDataset(Dataset):
                 if calculation1 == "합":
                     eq = f"{v1} - {v0} + {v2}"
                     form = "n1 - n0 + n2"
-                    ans = v1-v0+v2
+                    ans = v1 - v0 + v2
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
                 elif calculation1 == "차":
                     eq = f"{v1} - {v0} - {v2}"
                     form = "n1 - n0 - n2"
-                    ans = v1-v0-v2
+                    ans = v1 - v0 - v2
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 더했더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
                 if ans > 0:
                     break
             elif calculation0 == "차":
                 if calculation1 == "합":
                     eq = f"{v1} + {v0} + {v2}"
                     form = "n1 + n0 + n2"
-                    ans = v1+v0+v2
+                    ans = v1 + v0 + v2
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 더하면 얼마가 되는지 구하시오.".format(v0, v1, v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 더하면 얼마가 되겠습니까?".format(v0, v1, v2))
                 elif calculation1 == "차":
                     eq = f"{v1} + {v0} - {v2}"
                     form = "n1 + n0 - n2"
-                    ans = v1+v0-v2
+                    ans = v1 + v0 - v2
                     p = np.random.rand()
                     if p < 0.5:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었습니다. 어떤 수에서 {2}(을)를 빼면 얼마가 되는지 구하시오.".format(v0, v1, v2))
                     else:
-                        que = pyjosa.replace_josa(u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
+                        que = pyjosa.replace_josa(
+                            u"어떤 수에서 {0}(을)를 뺏더니 {1}(이)가 되었다면, 어떤 수에서 {2}(을)를 빼면 얼마가 되겠습니까?".format(v0, v1, v2))
                 if ans > 0:
                     break
 
@@ -1020,7 +1021,7 @@ class MWPDataset(Dataset):
         print('ans : {}'.format(ans))
         '''
 
-        #return que, eq, form, int(ans)
+        # return que, eq, form, int(ans)
         return que, eq, int(ans)
 
     def __get_problem06_04__(self):
@@ -1031,22 +1032,27 @@ class MWPDataset(Dataset):
             if calculation0 == "합":
                 p = np.random.rand()
                 if p < 0.5:
-                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1, v2))
+                    que = pyjosa.replace_josa(
+                        u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1,
+                                                                                                              v2))
                 else:
-                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
+                    que = pyjosa.replace_josa(
+                        u"{0}에 어떤 수를 더해야 할 것을 잘못하여 {1}에 어떤 수를 더했더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
                 form = "n2 - n1 + n0"
                 eq = f"{v2} - {v1} + {v0}"
-                #eq = f"X+{v1}={v2}, X+{v0}"
+                # eq = f"X+{v1}={v2}, X+{v0}"
                 ans = v2 - v1 + v0
             elif calculation0 == "차":
                 p = np.random.rand()
                 if p < 0.5:
-                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1, v2))
+                    que = pyjosa.replace_josa(
+                        u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었습니다. 바르게 계산하면 얼마인지 구하시오.".format(v0, v1, v2))
                 else:
-                    que = pyjosa.replace_josa(u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
+                    que = pyjosa.replace_josa(
+                        u"{0}에 어떤 수를 빼야 할 것을 잘못하여 {1}에 어떤 수를 뺏더니 {2}(이)가 되었다면, 바르게 계산하면 얼마일까요?".format(v0, v1, v2))
                 form = "n2 + n1 - n0"
                 eq = f"{v0} + {v2} - {v1}"
-                #eq = f"X-{v1}={v2}, X-{v0}"
+                # eq = f"X-{v1}={v2}, X-{v0}"
                 ans = v0 + v2 - v1
             # elif calculation0 == "곱":
             #     que = f"{v0}에 어떤 수를 곱해야 할 것을 잘못하여 {v1}에 어떤 수를 곱했더니 {v1*v2}이 되었습니다. 바르게 계산하면 얼마인지 구하시오."
@@ -1064,98 +1070,13 @@ class MWPDataset(Dataset):
         print('ans : {}'.format(ans))
         '''
 
-        #return que, eq, form, ans
+        # return que, eq, form, ans
         return que, eq, ans
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     ''' 유형7 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    def __get_problem07_01__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
-        a = self.__get_value__(1, 21)
-        b = self.__get_value__(1, 21)
-        arr_len = self.__get_value__(5, 8)
 
-        soa = self.__get_value__(10, 31)
-        eoa = self.__get_value__(soa + 1, 51)
-
-        arr = list(range(b, b + a * arr_len + 2))[::a]
-        arr = arr[:arr_len]
-
-        str_arr = ', '.join(str(e) for e in arr)
-        p = np.random.rand()
-        if p <= .5:
-            op = '+';
-            op_str = '합을'
-            eq = '((%d - %d) * %d) + %d + ((%d - %d) * %d) + %d' % (
-            arr[1], arr[0], eoa, arr[0], arr[1], arr[0], soa, arr[0])
-            ans = '%d' % ((a * eoa + b) + (a * soa + b))
-        else:
-            op = '-';
-            op_str = '차를'
-            eq = '((%d - %d) * %d) + %d - ((%d - %d) * %d) + %d' % (
-            arr[1], arr[0], eoa, arr[0], arr[1], arr[0], soa, arr[0])
-            ans = '%d' % ((a * eoa + b) - (a * soa + b))
-
-        if p <= 0.5:  # operation version
-            ques = ['%s와 같은 규칙에서 %d번째 놓일 수와 %d번째 놓일 수를 각각 A와 B라 할 때, B%sA를 구하시오.',
-                    '%s와 같은 규칙적인 수열에서 %d번째 놓일 수와 %d번째 놓일 숫자를 각각 A와 B라 할 때, B%sA를 구하시오.', ]
-            que = np.random.choice(ques) % (str_arr, soa, eoa, op)
-        else:  # string version
-            ques = ['%s와 같은 규칙에서 %d번째 놓일 수와 %d번째 놓일 수를 각각 A와 B라 할 때, A와 B의 %s 구하시오.',
-                    '%s와 같은 규칙적인 배열에서 %d번째 놓일 수와 %d번째 놓일 숫자를 각각 A와 B라 할 때, A와 B의 %s 구하시오.', ]
-            que = np.random.choice(ques) % (str_arr, soa, eoa, op_str)
-
-        return que, eq, ans
-
-    def __get_problem07_02__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
-        a = self.__get_value__(1, 21)
-        b = self.__get_value__(1, 21)
-        arr_len = self.__get_value__(5, 8)
-        var0 = b = self.__get_value__(65, 69)
-
-        pos = self.__get_value__(3, arr_len)
-
-        arr = list(range(b, b + a * arr_len + 2))[::a]
-        arr = arr[:arr_len]
-
-        str_arr = arr
-        str_arr[pos] = chr(var0)
-        str_arr = ', '.join(str(e) for e in arr)
-
-        eq = '((%d - %d) * %d) + %d' % (arr[1], arr[0], pos, arr[0])
-        ans = '%d' % ((a * pos + b))
-
-        ques = ['자연수를 규칙에 따라 %s로 배열하였습니다. %s에 알맞은 수를 구하시오.',
-                '%s와 같은 규칙에서 %s에 알맞은 수를 구하시오.',
-                '일정한 규칙에 따라 자연수를 %s로 배열하였습니다. %s에 알맞은 수를 구하시오.',
-                '자연수를 특정한 규칙에 따라 %s로 배열하였습니다. %s에 알맞은 숫자는 무엇인가요?', ]
-        que = np.random.choice(ques) % (str_arr, chr(var0))
-
-        return que, eq, ans
-
-    def __get_problem07_03__(self):  # 등차, 등비, 조화, 제곱 등 기타 수열
-        a = self.__get_value__(1, 21)
-        b = self.__get_value__(1, 21)
-        arr_len = self.__get_value__(5, 8)
-
-        pos = self.__get_value__(arr_len, 101)
-
-        arr = list(range(b, b + a * arr_len + 2))[::a]
-        arr = arr[:arr_len]
-
-        str_arr = ', '.join(str(e) for e in arr)
-
-        eq = '((%d - %d) * %d) + %d' % (arr[1], arr[0], pos, arr[0])
-        ans = '%d' % ((a * pos + b))
-
-        ques = ['자연수를 규칙에 따라 %s로 배열하였습니다. %d번째에 알맞은 수를 구하시오.',
-                '%s와 같은 규칙에서 %d번째에 알맞은 수를 구하시오.',
-                '일정한 규칙에 따라 자연수를 %s로 배열하였습니다. %d번째에 알맞은 수를 구하시오.',
-                '자연수를 특정한 규칙에 따라 %s로 배열하였습니다. %d번째에 알맞은 숫자는 무엇인가요?', ]
-        que = np.random.choice(ques) % (str_arr, pos)
-
-        return que, eq, ans
-
-    '''
     def __get_problem07_01__(self):
         while True:
             v0 = self.__get_value__(1, 10)
@@ -1164,16 +1085,16 @@ class MWPDataset(Dataset):
 
             r0 = "R" + str(v2)
             r1 = "R" + str(v3)
-            
-            que = f"{v0}, {v0+v1}, {v0+v1*2}, {v0+v1*3}, {v0+v1*4}와 같은 규칙에서 R{v2} 번째 놓일 수와 R{v3} 번째 놓일 수를 각각 A와 B라 할 때, B-A를 구하시오."
-            eq = f"[{v0}, {v0+v1}, {v0+v1*2}, {v0+v1*3}, {v0+v1*4}], X{v3} - X{v2}"
-            ans  = (v3-v2)*v1
+
+            que = f"{v0}, {v0 + v1}, {v0 + v1 * 2}, {v0 + v1 * 3}, {v0 + v1 * 4}와 같은 규칙에서 R{v2} 번째 놓일 수와 R{v3} 번째 놓일 수를 각각 A와 B라 할 때, B-A를 구하시오."
+            eq = f"[{v0}, {v0 + v1}, {v0 + v1 * 2}, {v0 + v1 * 3}, {v0 + v1 * 4}], X{v3} - X{v2}"
+            ans = (v3 - v2) * v1
 
             if v2 < v3:
                 break
-        #print('[que] : {}'.format(que))
-        #print('[eq] : {}'.format(eq))
-        #print('[ans] : {}'.format(ans))
+        # print('[que] : {}'.format(que))
+        # print('[eq] : {}'.format(eq))
+        # print('[ans] : {}'.format(ans))
 
         return que, eq, ans
 
@@ -1184,8 +1105,8 @@ class MWPDataset(Dataset):
         # p = np.random.rand()
         # if p < 1/2:
 
-        sequence_lst = [v0, v0+v1*1, v0+v1*2, v0+v1*3, v0+v1*4, v0+v1*5]
-        
+        sequence_lst = [v0, v0 + v1 * 1, v0 + v1 * 2, v0 + v1 * 3, v0 + v1 * 4, v0 + v1 * 5]
+
         sequence_lst.pop(v2)
         sequence_lst.insert(v2, "A")
         form_lst = ["n0", "n1", "n2", "n3", "n4", "n5"]
@@ -1198,10 +1119,10 @@ class MWPDataset(Dataset):
                 form += ", "
         else:
             form += " ]"
-            
-        que = '자연수를 규칙에 따라 {}로 배열하였습니다. A에 알맞은 수를 구하시오.'.format(re.sub("\'","",str(sequence_lst))[1:-1])
-        eq = "[ " + re.sub("\'","",str(sequence_lst))[1:-1] + " ]"
-        ans = v0+v1*v2
+
+        que = '자연수를 규칙에 따라 {}로 배열하였습니다. A에 알맞은 수를 구하시오.'.format(re.sub("\'", "", str(sequence_lst))[1:-1])
+        eq = "[ " + re.sub("\'", "", str(sequence_lst))[1:-1] + " ]"
+        ans = v0 + v1 * v2
         print('[que] : {}'.format(que))
         print('[eq] : {}'.format(eq))
         print('[ans] : {}'.format(ans))
@@ -1213,7 +1134,8 @@ class MWPDataset(Dataset):
         num = ['0', '첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열', '열한', '열두', '열세']
         # p = np.random.rand()
         # if p < 1/2:
-        sequence_lst = [v0, v0+2**2, v0+2**2+3**2, v0+2**2+3**2+4**2, v0+2**2+3**2+4**2+5**2, v0+2**2+3**2+4**2+5**2+6**2]
+        sequence_lst = [v0, v0 + 2 ** 2, v0 + 2 ** 2 + 3 ** 2, v0 + 2 ** 2 + 3 ** 2 + 4 ** 2,
+                        v0 + 2 ** 2 + 3 ** 2 + 4 ** 2 + 5 ** 2, v0 + 2 ** 2 + 3 ** 2 + 4 ** 2 + 5 ** 2 + 6 ** 2]
         sequence_lst = str(sequence_lst)[1:-1]
         que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format(sequence_lst, v1)
         form_que = '{}과 같은 규칙으로 수를 배열하고 있습니다. R{} 번째 수는 무엇입니까?'.format('n0, n1, n2, n3, n4, n5', v1)
@@ -1224,49 +1146,32 @@ class MWPDataset(Dataset):
         # print(form)
         ans = v0
         for i in range(2, v1):
-            ans += i**2
-        
+            ans += i ** 2
+
         print('que : {}'.format(que))
         print('eq : {}'.format(eq))
         print('ans : {}'.format(ans))
 
         return que, eq, ans
-    '''
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형8 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem08_01__(self):
         n = self.__get_value__(5, 15)
         init = self.__get_value__(1, 5)
         interval = self.__get_value__(1, 5)
-        
+
         ans_idx = self.__get_value__(10, 150)
-        
+
         arr = list(range(init, init + 200))[::interval]
         arr = arr[:n]
         arr = sum(itertools.repeat(arr, 2), [])
-        
+
         str_arr = ', '.join(str(e) for e in arr)
-        eq = 'PATCOM(STRPAT(%s))[%d]' %(arr, ans_idx - 1)
-        ans = '%d' %(patternize(find_str_pattern(arr))[ans_idx - 1])
+        eq = 'PATCOM(STRPAT(%s))[%d]' % (arr, ans_idx - 1)
+        ans = '%d' % (patternize(find_str_pattern(arr))[ans_idx - 1])
 
         p = np.random.rand()
         if p < 0.25:
@@ -1287,7 +1192,7 @@ class MWPDataset(Dataset):
         n = self.__get_value__(2, 4)
         ball_name = self.__get_ball__()
         ans_idx = self.__get_value__(10, 150)
-        
+
         arr = []
         colors = []
         q = '왼쪽부터 '
@@ -1301,12 +1206,12 @@ class MWPDataset(Dataset):
                 if color not in colors:
                     colors.append(color)
                     break
-            q += '%s %s %d개,' %(color, ball_name, n_balls)
+            q += '%s %s %d개,' % (color, ball_name, n_balls)
         arr = sum(arr, [])
         q = q[:-1]
-        
-        eq = 'PATCOM(%s)[%d]' %(arr, ans_idx - 1)
-        ans = '%s' %(colors[patternize(arr)[ans_idx - 1]])
+
+        eq = 'PATCOM(%s)[%d]' % (arr, ans_idx - 1)
+        ans = '%s' % (colors[patternize(arr)[ans_idx - 1]])
 
         p = np.random.rand()
         if p < 0.25:
@@ -1322,7 +1227,7 @@ class MWPDataset(Dataset):
             que = '%s가 반복되어 있습니다. %d번째 공의 색깔을 쓰시오.' \
                   % (q, ans_idx)
         return que, eq, ans
-        
+
     def __get_problem08_03__(self):
         n_people = self.__get_value__(2, 4)
         names = self.__get_name_n_2__(n_people)
@@ -1330,17 +1235,17 @@ class MWPDataset(Dataset):
         ans_idx = self.__get_value__(20, n_max)
         n_foods = self.__get_value__(2, 8)
         food_name = self.__get_food__()
-        
+
         arr = []
         names_str = ''
         for idx in range(n_people):
             arr.append(list(itertools.repeat(idx, n_foods)))
-            names_str += '%s,' %(names[idx])
+            names_str += '%s,' % (names[idx])
         arr = sum(arr, [])
         names_str = names_str[:-1]
-        
-        eq = 'PATCOM(%s)[%d]' %(arr, ans_idx - 1)
-        ans = '%s' %(names[patternize(arr)[ans_idx - 1]])
+
+        eq = 'PATCOM(%s)[%d]' % (arr, ans_idx - 1)
+        ans = '%s' % (names[patternize(arr)[ans_idx - 1]])
 
         p = np.random.rand()
         if p < 0.25:
@@ -1356,35 +1261,16 @@ class MWPDataset(Dataset):
             que = '%d개의 %s를 %s %d명에게 순서대로 %d개씩 나누어주면, %d번째 받는 사람은 누구입니까?' \
                   % (n_max, food_name, names_str, n_people, n_foods, ans_idx)
         return que, eq, ans
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ''' 유형9 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     def __get_problem09_01__(self):
         n0, n1 = self.__get_name2__()
         ns = [n0[0:2], n1[0:2]]
         v0 = self.__get_value__(2, 5)
         str_vs0, vs0 = self.__get_value_array__(1, 50, v0)
-        
+
         v1 = self.__get_value__(2, 5)
         str_vs1, vs1 = self.__get_value_array__(1, 50, v1)
 
@@ -1418,45 +1304,48 @@ class MWPDataset(Dataset):
         kor_b, kor_b_str = self.__get_kor_bracket_seq__(num)
         num_q = num
         arr = range(num)
-        
-        if np.random.rand() >= .5: # in case box name
+
+        if np.random.rand() >= .5:  # in case box name
             obj_name = self.__get_box__()
-        else: # in case ball name
-            obj_name = self.__get_ball__()        
-        
-        if np.random.rand() >= .5: # in case ">"
+        else:  # in case ball name
+            obj_name = self.__get_ball__()
+
+        if np.random.rand() >= .5:  # in case ">"
             comp_op = '>'
             comp_op_str = '큰'
-        else: # in case "<"
+        else:  # in case "<"
             comp_op = '<'
             comp_op_str = '작은'
-        
+
         q_str = ''
         ans = list(arr)
-        
+
         for idx in range(num_q):
-            idxs = np.random.choice(num, 2, replace = False)
-            if np.random.rand() >= .5: # in case bigger
-                q_str += '%s %s는 %s %s보다 큽니다. ' %(kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
+            idxs = np.random.choice(num, 2, replace=False)
+            if np.random.rand() >= .5:  # in case bigger
+                q_str += '%s %s는 %s %s보다 큽니다. ' % (kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
                 ans = switch(ans, idxs[0], idxs[1])
-                
-                if idx == 0: eq = 'SWITCH(%s, %d, %d)' %(arr, idxs[0], idxs[1])
-                else: eq = 'SWITCH(%s, %d, %d)' %(eq, idxs[0], idxs[1])
-                
-            else: # in case smaller
-                q_str += '%s %s는 %s %s보다 작습니다. ' %(kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
+
+                if idx == 0:
+                    eq = 'SWITCH(%s, %d, %d)' % (arr, idxs[0], idxs[1])
+                else:
+                    eq = 'SWITCH(%s, %d, %d)' % (eq, idxs[0], idxs[1])
+
+            else:  # in case smaller
+                q_str += '%s %s는 %s %s보다 작습니다. ' % (kor_b[idxs[0]], obj_name, kor_b[idxs[1]], obj_name)
                 ans = switch(ans, idxs[1], idxs[0])
-        
-                if idx == 0: eq = 'SWITCH(%s, %d, %d)' %(arr, idxs[0], idxs[1])
-                else: eq = 'SWITCH(%s, %d, %d)' %(eq, idxs[1], idxs[0])
-        
+
+                if idx == 0:
+                    eq = 'SWITCH(%s, %d, %d)' % (arr, idxs[0], idxs[1])
+                else:
+                    eq = 'SWITCH(%s, %d, %d)' % (eq, idxs[1], idxs[0])
+
         if comp_op == '>':
-            eq = 'ARGMAX(%s)' %(eq)
+            eq = 'ARGMAX(%s)' % (eq)
             ans = kor_b[argmax(ans)]
         else:
-            eq = 'ARGMIN(%s)' %(eq)
+            eq = 'ARGMIN(%s)' % (eq)
             ans = kor_b[argmin(ans)]
-            
 
         que = '%s %d개의 %s가 있습니다. %s크기가 가장 %s %s는 무엇입니까?' \
               % (kor_b_str, num, obj_name, q_str, comp_op_str, obj_name)
@@ -1467,7 +1356,7 @@ class MWPDataset(Dataset):
         n = self.__get_value__(2, 7)
         str_vs, vs = self.__get_value_array__(0, 15, n, dtype='float')
         th = self.__get_float_value__(0, 5)
-        
+
         if np.random.rand() >= .5:
             comp_op_str = '큰'
             eq = 'len(CMP(%s, %.2f))' % (vs, th)
@@ -1490,12 +1379,10 @@ class MWPDataset(Dataset):
         else:
             que = '%d개의 수 %s이 있다. 이중에서 %.2f보다 %s 수는 모두 몇 개입니까?' \
                   % (n, str_vs, th, comp_op_str)
-        
+
         return que, eq, ans
 
 
-
-        
 if __name__ == '__main__':
     mwp_dataset = MWPDataset()
     data_loader = DataLoader(mwp_dataset, batch_size=1, shuffle=False, num_workers=0)
@@ -1508,11 +1395,11 @@ if __name__ == '__main__':
 
         question_list.append(que[0])
         equation_list.append(eq[0])
-        #answer_list.append(ans.detach().cpu().numpy())
+        # answer_list.append(ans.detach().cpu().numpy())
         answer_list.append(ans[0])
     df = pd.DataFrame({'Question': question_list,
                        'Equation': equation_list,
-                       #'Answer': answer_list})
-                       'Answer' : np.array(answer_list).reshape(-1)})
+                       # 'Answer': answer_list})
+                       'Answer': np.array(answer_list).reshape(-1)})
     df.to_csv('train.csv', index=False, encoding='euc-kr')
 
