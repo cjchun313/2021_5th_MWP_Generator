@@ -8,7 +8,7 @@
 * 이미지가 포함된 문제는 출제되지 않으며 텍스트로 구성된 번호, 문제 형식의 문제지를 입력 받아 정해진 답안지 형식으로 제출(json 형식)
 * 2021 인공지능 그랜드 챌린지 5차 1단계 대회 규격을 준수함
 * Train : 100,000개 (train.json)
-* Validation : 10,000개 (validataion.json)
+* Validation : 10,000개 (val.json)
 * Test : 10,000개 (test.json) 
 
 ### 서술형 수학문제 예시
